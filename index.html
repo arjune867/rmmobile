@@ -51,7 +51,7 @@
       padding-bottom: calc(var(--bottom-nav-height) + var(--sab) + 20px); /* Space for bottom nav */
     }
 
-    /* === HEADER (Desktop Only mostly) === */
+    /* === HEADER (Sticky Top) === */
     header {
       background: var(--surface);
       height: calc(var(--header-height) + var(--sat));
@@ -74,13 +74,17 @@
     .desktop-nav a { text-decoration: none; color: var(--text-muted); font-weight: 600; font-size: 14px; transition: 0.2s; }
     .desktop-nav a:hover, .desktop-nav a.active { color: var(--primary); }
 
+    /* Mobile Actions (Search & Menu) */
+    .mobile-actions { display: flex; gap: 16px; align-items: center; }
+    .icon-btn { font-size: 22px; cursor: pointer; color: var(--text-main); }
+
     /* === LAYOUT GRID === */
     .container {
       max-width: var(--max-width);
       margin: 0 auto;
       padding: 20px 16px;
       display: grid;
-      grid-template-columns: 1fr 320px; /* 2 Kolom: Konten (Flexible) - Sidebar (Fixed) */
+      grid-template-columns: 1fr 300px; /* Konten Utama + Sidebar Kanan */
       gap: 24px;
       align-items: start;
     }
@@ -100,11 +104,13 @@
     }
     .hero-title { margin: 0 0 10px; font-size: 22px; line-height: 1.3; }
 
-    /* News Grid (Inside Main) - Responsive 2 Columns on Mobile */
+    /* News Grid 3 Columns Logic */
     .section-title { font-size: 18px; font-weight: 800; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+    
     .news-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Desktop responsive */
+      /* Default 3 Kolom sesuai request */
+      grid-template-columns: repeat(3, 1fr); 
       gap: 16px;
     }
     
@@ -117,19 +123,53 @@
     .news-thumb { width: 100%; aspect-ratio: 16/9; object-fit: cover; background: #eee; }
     .news-info { padding: 12px; flex: 1; display: flex; flex-direction: column; }
     .news-cat { font-size: 10px; color: var(--primary); font-weight: 700; text-transform: uppercase; margin-bottom: 4px; }
-    .news-head { font-size: 14px; font-weight: 700; line-height: 1.4; margin: 0 0 8px; flex: 1; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;}
+    .news-head { font-size: 13px; font-weight: 700; line-height: 1.4; margin: 0 0 8px; flex: 1; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;}
     .news-meta { font-size: 11px; color: var(--text-muted); margin-top: auto; }
 
-    /* === SIDEBAR (Desktop/Tablet) === */
+    /* === SIDEBAR (Widget Kanan) === */
     .sidebar { display: flex; flex-direction: column; gap: 20px; }
     .widget { background: var(--surface); border-radius: 16px; padding: 20px; box-shadow: var(--shadow); }
     .widget-title { font-size: 16px; font-weight: 700; margin: 0 0 16px; border-bottom: 2px solid var(--bg); padding-bottom: 8px; }
     
     .list-item { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; text-decoration: none; color: inherit; }
     .list-item:last-child { margin-bottom: 0; }
-    .list-thumb { width: 60px; height: 60px; border-radius: 8px; object-fit: cover; }
     .list-info h4 { margin: 0; font-size: 14px; font-weight: 600; line-height: 1.3; }
     .list-info span { font-size: 12px; color: var(--text-muted); }
+
+    /* === SIDE DRAWER (Menu Samping) === */
+    .side-drawer {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      z-index: 2000; visibility: hidden; transition: visibility 0.3s;
+    }
+    .side-drawer.open { visibility: visible; }
+    
+    .drawer-overlay {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5); opacity: 0; transition: opacity 0.3s;
+    }
+    .side-drawer.open .drawer-overlay { opacity: 1; }
+    
+    .drawer-content {
+      position: relative; width: 280px; height: 100%;
+      background: var(--surface); padding: 24px;
+      padding-top: calc(20px + var(--sat));
+      transform: translateX(-100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex; flex-direction: column; gap: 8px;
+      box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+    }
+    .side-drawer.open .drawer-content { transform: translateX(0); }
+    
+    .drawer-link {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px; border-radius: 8px;
+      text-decoration: none; color: var(--text-main);
+      font-weight: 600; font-size: 15px;
+      transition: background 0.2s;
+    }
+    .drawer-link:hover { background: var(--bg); color: var(--primary); }
+    .drawer-link i { font-size: 18px; color: var(--text-muted); }
+    .drawer-link.active { background: #e6fcf5; color: var(--primary); }
+    .drawer-link.active i { color: var(--primary); }
 
     /* === BOTTOM NAVBAR (Mobile Only) === */
     .bottom-nav {
@@ -143,7 +183,6 @@
       grid-template-columns: repeat(5, 1fr); /* 5 Icons Grid */
       z-index: 100;
     }
-    
     .nav-item {
       display: flex; flex-direction: column; align-items: center; justify-content: center;
       text-decoration: none; color: var(--text-muted);
@@ -163,35 +202,43 @@
       display: none; animation: slideUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       cursor: pointer;
     }
-
     @keyframes slideUp { from { transform: translate(-50%, 100%); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }
 
     /* === RESPONSIVE RULES === */
     @media (min-width: 900px) {
       .desktop-nav { display: flex; }
       .bottom-nav { display: none; }
+      .mobile-actions .bi-list { display: none; } /* Hide hamburger on desktop */
       body { padding-bottom: 0; }
     }
 
     @media (max-width: 899px) {
-      .container { grid-template-columns: 1fr; /* Stack layout on mobile */ }
-      .sidebar { order: 2; } /* Sidebar moves below content */
+      .container { grid-template-columns: 1fr; }
+      .sidebar { order: 2; }
       
-      /* Mobile Grid Adjustment: 2 Columns for News */
-      .news-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
-      .news-head { font-size: 13px; }
+      /* Mobile Grid Adjustment: 
+         User request: "Grid 3 Kolom". 
+         However, on very small screens (under 400px), 3 columns is too tight.
+         We keep 3 columns for tablets/large phones, but switch to 2 for small phones for readability.
+      */
+      .news-grid { grid-template-columns: repeat(2, 1fr); } 
       .hero-img { height: 200px; }
       .hero-title { font-size: 18px; }
     }
     
+    /* Extra logic for Tablets to respect the 3-column request before dropping to 2 */
+    @media (min-width: 600px) and (max-width: 899px) {
+       .news-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    
     @media (max-width: 380px) {
-      .news-grid { grid-template-columns: 1fr; } /* Very small screens 1 column */
+      .news-grid { grid-template-columns: repeat(2, 1fr); gap:10px; } /* Force 2 cols minimal */
     }
   </style>
 </head>
 <body>
 
-<!-- Header Top (Logo & Search) -->
+<!-- Header Top -->
 <header>
   <div class="header-content">
     <a href="#" class="brand">
@@ -208,12 +255,41 @@
       <a href="#akun">Akun</a>
     </nav>
 
-    <!-- Mobile Action (Search icon placeholder) -->
-    <div style="display: flex; gap:16px; align-items:center;">
-      <i class="bi bi-search" style="font-size:20px; cursor:pointer;"></i>
+    <!-- Mobile Actions -->
+    <div class="mobile-actions">
+      <i class="bi bi-search icon-btn"></i>
+      <!-- Hamburger Menu (Garis 3) -->
+      <i class="bi bi-list icon-btn" onclick="toggleDrawer()"></i>
     </div>
   </div>
 </header>
+
+<!-- Side Drawer (Menu Samping) -->
+<div id="sideDrawer" class="side-drawer">
+  <div class="drawer-overlay" onclick="toggleDrawer()"></div>
+  <div class="drawer-content">
+    <div style="margin-bottom: 20px; display:flex; align-items:center; gap:10px;">
+       <img src="https://i.postimg.cc/43JHzVW8/329314-3ae915ca4c2cedce83b1b12a7addfd9d-22-11-2022-19-45-25.jpg" width="40" style="border-radius:8px;">
+       <h3 style="margin:0; font-size:18px;">Menu</h3>
+    </div>
+    
+    <a href="#home" class="drawer-link" onclick="toggleDrawer()">
+      <i class="bi bi-house-door"></i> Home
+    </a>
+    <a href="#event" class="drawer-link" onclick="toggleDrawer()">
+      <i class="bi bi-calendar-event"></i> Event
+    </a>
+    <a href="#trending" class="drawer-link" onclick="toggleDrawer()">
+      <i class="bi bi-graph-up-arrow"></i> Trending
+    </a>
+    <hr style="border:0; border-top:1px solid #eee; width:100%; margin:8px 0;">
+    <a href="#akun" class="drawer-link" onclick="toggleDrawer()">
+      <i class="bi bi-person"></i> Akun Saya
+    </a>
+    
+    <button onclick="toggleDrawer()" style="margin-top:auto; background:#eee; border:none; padding:10px; border-radius:8px; width:100%; font-weight:600; color:#555;">Tutup Menu</button>
+  </div>
+</div>
 
 <div class="container">
   
@@ -234,6 +310,7 @@
         <i class="bi bi-lightning-charge-fill" style="color: gold;"></i> Terkini
       </div>
       
+      <!-- Grid 3 Kolom (Desktop) / 2 Kolom (Mobile) -->
       <div class="news-grid">
         <!-- Item 1 -->
         <a href="#" class="news-card">
@@ -267,8 +344,30 @@
           <img src="https://i.postimg.cc/vmrWRHV8/Whats-App-Image-2025-10-30-at-18-56-32.jpg" class="news-thumb" alt="News">
           <div class="news-info">
             <span class="news-cat">Lokasi</span>
-            <h3 class="news-head">Spot Liar Sungai Brantas yang Lagi Rame</h3>
+            <h3 class="news-head">Spot Liar Sungai Brantas yang Rame</h3>
             <div class="news-meta">5 Jam lalu</div>
+          </div>
+        </a>
+        <!-- Item 5 (Tambahan agar Grid terlihat penuh) -->
+        <a href="#" class="news-card">
+          <div class="news-thumb" style="background:#ddd; display:flex; align-items:center; justify-content:center;">
+             <i class="bi bi-camera-video" style="font-size:24px; color:#888;"></i>
+          </div>
+          <div class="news-info">
+            <span class="news-cat">Video</span>
+            <h3 class="news-head">Vlog: Mancing Nila Babon di Rawa Pening</h3>
+            <div class="news-meta">6 Jam lalu</div>
+          </div>
+        </a>
+         <!-- Item 6 -->
+        <a href="#" class="news-card">
+          <div class="news-thumb" style="background:#2b8f6b; display:flex; align-items:center; justify-content:center;">
+             <i class="bi bi-trophy" style="font-size:24px; color:#fff;"></i>
+          </div>
+          <div class="news-info">
+            <span class="news-cat">Event</span>
+            <h3 class="news-head">Grand Strike Tournament 2026</h3>
+            <div class="news-meta">1 Hari lalu</div>
           </div>
         </a>
       </div>
@@ -294,6 +393,13 @@
           <div class="news-info">
             <h3 class="news-head">Komunitas: Gathering Akbar Bulan Depan</h3>
             <div class="news-meta">Viral</div>
+          </div>
+        </a>
+         <a href="#" class="news-card">
+          <div class="news-thumb" style="background:#0b6b4f; display:flex; align-items:center; justify-content:center; color:white; font-weight:bold; font-size:24px;">?</div>
+          <div class="news-info">
+            <h3 class="news-head">Misteri Ikan Tapah Raksasa Muncul Kembali</h3>
+            <div class="news-meta">Hot News</div>
           </div>
         </a>
       </div>
@@ -400,11 +506,15 @@
 </button>
 
 <script>
-  // === 1. NAVIGATION LOGIC ===
+  // === 1. SIDE DRAWER LOGIC ===
+  function toggleDrawer() {
+    const drawer = document.getElementById('sideDrawer');
+    drawer.classList.toggle('open');
+  }
+
+  // === 2. NAVIGATION LOGIC ===
   function setActive(element) {
-    // Reset active class
     document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-    // Set active
     element.classList.add('active');
   }
 
@@ -433,7 +543,7 @@
     }
   });
 
-  // === 2. PWA INSTALL LOGIC ===
+  // === 3. PWA INSTALL LOGIC ===
   let deferredPrompt;
   const installBtn = document.getElementById('install-btn');
 
@@ -491,7 +601,6 @@
     }
   });
 
-  // Hide install button if app is already installed
   window.addEventListener('appinstalled', () => {
     installBtn.style.display = 'none';
   });
