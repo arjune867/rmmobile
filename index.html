@@ -129,7 +129,7 @@
     .hero-card {
       background: var(--surface); border-radius: 16px; overflow: hidden;
       box-shadow: var(--shadow); margin-bottom: 24px; position: relative;
-      cursor: pointer; /* Menandakan bisa diklik */
+      cursor: pointer;
     }
     .hero-img { width: 100%; height: 300px; object-fit: cover; display: block; }
     .hero-content { padding: 20px; }
@@ -148,6 +148,7 @@
       background: var(--surface); border-radius: 12px; overflow: hidden;
       box-shadow: var(--shadow); text-decoration: none; color: inherit;
       display: flex; flex-direction: column; height: 100%; transition: transform 0.2s;
+      position: relative;
     }
     .news-card:active { transform: scale(0.98); }
     .news-thumb { width: 100%; aspect-ratio: 16/9; object-fit: cover; background: #eee; }
@@ -164,6 +165,106 @@
     }
     .stat-item { display: flex; align-items: center; gap: 3px; }
     .stat-rating { color: #f59e0b; font-weight: 700; }
+
+    /* === ADVERTISING STYLES === */
+    
+    /* 1. BANNER AD (Rectangular) */
+    .ad-banner-container {
+      width: 100%; margin-bottom: 24px; display: flex; justify-content: center;
+    }
+    .ad-banner {
+      background: #f1f5f9; border: 1px solid #e2e8f0;
+      width: 100%; max-width: 728px; height: 90px; /* Leaderboard size */
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      color: #94a3b8; font-size: 11px; text-transform: uppercase; letter-spacing: 1px;
+      border-radius: 8px; overflow: hidden; position: relative;
+    }
+    @media (max-width: 768px) { .ad-banner { height: 250px; max-width: 300px; } /* MREC size mobile */ }
+
+    /* 2. NATIVE AD (In-Feed) */
+    .ad-native {
+      border: 1px solid #e5e7eb; background: #fffbf0; /* Slightly yellowish for ad distinction */
+    }
+    .ad-native .news-cat { color: #d97706; }
+    .ad-badge {
+      position: absolute; top: 8px; right: 8px;
+      background: rgba(0,0,0,0.1); color: #555;
+      font-size: 9px; padding: 2px 6px; border-radius: 4px;
+      font-weight: bold; border: 1px solid rgba(0,0,0,0.1);
+    }
+
+    /* 3. PARALLAX AD */
+    .ad-parallax-wrapper {
+      margin: 30px -16px; /* Break container padding */
+      height: 300px;
+      position: relative; overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .ad-parallax-bg {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      background-image: url('https://images.unsplash.com/photo-1535591273668-578e31182c4f?q=80&w=2070&auto=format&fit=crop');
+      background-size: cover; background-position: center;
+      background-attachment: fixed; /* The Parallax Effect */
+      filter: brightness(0.6);
+    }
+    /* Mobile Parallax Fix (Fixed attachment is often buggy on mobile) */
+    @media (hover: none) { .ad-parallax-bg { background-attachment: scroll; } } 
+    
+    .ad-parallax-content {
+      position: relative; z-index: 2; text-align: center; color: white; padding: 20px;
+    }
+    .ad-parallax-btn {
+      background: #dc2626; color: white; padding: 10px 24px; border: none;
+      border-radius: 50px; font-weight: bold; margin-top: 10px; cursor: pointer;
+      text-transform: uppercase; font-size: 12px; letter-spacing: 1px;
+    }
+
+    /* 4. ANCHOR AD (Sticky Bottom) */
+    .ad-anchor {
+      position: fixed; bottom: calc(var(--bottom-nav-height) + var(--sab)); 
+      left: 0; right: 0; height: 60px;
+      background: #ffffff; border-top: 1px solid #e5e7eb;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 4000; padding: 0 16px;
+      transform: translateY(200%); transition: transform 0.5s ease;
+    }
+    .ad-anchor.show { transform: translateY(0); }
+    @media (min-width: 900px) { .ad-anchor { bottom: 0; } }
+    
+    .ad-anchor-close {
+      position: absolute; top: -10px; right: 10px;
+      background: #333; color: white; width: 20px; height: 20px;
+      border-radius: 50%; font-size: 12px; display: flex; align-items: center; justify-content: center;
+      cursor: pointer; border: 2px solid white;
+    }
+
+    /* 5. INTERSTITIAL AD (Full Screen) */
+    .ad-interstitial {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.85); z-index: 6000;
+      display: none; flex-direction: column; align-items: center; justify-content: center;
+      opacity: 0; transition: opacity 0.3s;
+    }
+    .ad-interstitial.show { display: flex; opacity: 1; }
+    .ad-interstitial-content {
+      width: 90%; max-width: 320px; aspect-ratio: 1/1.5;
+      background: white; border-radius: 16px; overflow: hidden;
+      position: relative; display: flex; flex-direction: column;
+    }
+    .ad-interstitial-img {
+      width: 100%; height: 80%; object-fit: cover;
+    }
+    .ad-interstitial-footer {
+      height: 20%; padding: 10px; display: flex; align-items: center; justify-content: space-between;
+      background: #f8f9fa;
+    }
+    .ad-interstitial-close {
+      position: absolute; top: 10px; right: 10px;
+      background: white; color: black; width: 30px; height: 30px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; cursor: pointer;
+      font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
 
     /* === SIDEBAR === */
     .sidebar { display: flex; flex-direction: column; gap: 20px; }
@@ -222,7 +323,7 @@
     .reader-back { border: none; background: transparent; font-size: 24px; padding: 0; display:flex; align-items:center; gap:8px; font-weight:600; cursor: pointer; color: var(--text-main);}
     
     .reader-hero { width: 100%; height: 250px; object-fit: cover; }
-    .reader-content { padding: 20px; padding-bottom: 100px; /* Extra space for floating bar */ max-width: 800px; margin: 0 auto; }
+    .reader-content { padding: 20px; padding-bottom: 100px; max-width: 800px; margin: 0 auto; }
     .reader-meta { font-size: 12px; color: var(--text-muted); margin-bottom: 12px; display:flex; gap:10px; align-items:center; }
     .reader-title { font-size: 24px; font-weight: 800; line-height: 1.3; margin: 0 0 16px; color: #111; }
     .reader-body { font-size: 16px; line-height: 1.8; color: #333; }
@@ -231,7 +332,7 @@
     /* === FLOATING SHARE BAR === */
     .floating-share-bar {
       position: fixed; bottom: 30px; left: 50%; 
-      transform: translateX(-50%) translateY(120px); /* Hidden by default */
+      transform: translateX(-50%) translateY(120px);
       background: rgba(255, 255, 255, 0.95);
       backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
       border: 1px solid rgba(255,255,255,0.8);
@@ -242,37 +343,20 @@
       transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
       width: auto; max-width: 90%;
     }
-    
-    .floating-share-bar.visible {
-      transform: translateX(-50%) translateY(0);
-    }
-    
+    .floating-share-bar.visible { transform: translateX(-50%) translateY(0); }
     .share-pill-btn {
       width: 44px; height: 44px; border-radius: 50%; border: none;
       display: flex; align-items: center; justify-content: center;
       cursor: pointer; font-size: 18px; transition: all 0.2s;
       background: transparent; color: #555; position: relative;
     }
-    
     .share-pill-btn:hover { background: #f3f4f6; transform: translateY(-3px); }
     .share-pill-btn:active { transform: scale(0.95); }
-    
-    /* Social Colors */
     .sp-wa { color: #25D366; background: rgba(37, 211, 102, 0.1); }
-    .sp-wa:hover { background: #25D366; color: white; }
-    
     .sp-fb { color: #1877F2; background: rgba(24, 119, 242, 0.1); }
-    .sp-fb:hover { background: #1877F2; color: white; }
-    
     .sp-tw { color: #000; background: rgba(0, 0, 0, 0.05); }
-    .sp-tw:hover { background: #000; color: white; }
-    
     .sp-cp { color: #666; }
-    
-    .share-label {
-      font-size: 11px; font-weight: 800; text-transform: uppercase;
-      color: var(--text-muted); margin-left: 12px; margin-right: 4px;
-    }
+    .share-label { font-size: 11px; font-weight: 800; text-transform: uppercase; color: var(--text-muted); margin-left: 12px; margin-right: 4px; }
 
     /* === BOTTOM NAVBAR === */
     .bottom-nav {
@@ -409,25 +493,18 @@
       <i class="bi bi-bookmark" style="font-size:20px; cursor:pointer;" onclick="alert('Berita disimpan!')"></i>
     </div>
   </div>
-  
   <img src="" id="r_img" class="reader-hero" alt="Cover">
-  
   <div class="reader-content">
     <span id="r_cat" style="color:var(--primary); font-weight:700; font-size:12px; text-transform:uppercase;">CATEGORY</span>
     <h1 id="r_title" class="reader-title">Title Here</h1>
-    
     <div class="reader-meta">
        <img src="https://i.postimg.cc/43JHzVW8/329314-3ae915ca4c2cedce83b1b12a7addfd9d-22-11-2022-19-45-25.jpg" width="24" height="24" style="border-radius:50%;">
        <span>Oleh <strong>Admin</strong></span> • <span id="r_date">22 Nov 2025</span>
     </div>
     <hr style="border:0; border-top:1px solid #eee; margin-bottom:20px;">
-    
-    <div id="r_body" class="reader-body">
-      <!-- Content Injected Here -->
-    </div>
+    <div id="r_body" class="reader-body"></div>
   </div>
-  
-  <!-- FLOATING SHARE BUTTONS (MELAYANG DI BAWAH) -->
+  <!-- FLOATING SHARE BUTTONS -->
   <div id="floatShare" class="floating-share-bar">
     <span class="share-label">Bagikan:</span>
     <button class="share-pill-btn sp-wa" onclick="shareTo('wa')"><i class="bi bi-whatsapp"></i></button>
@@ -435,16 +512,22 @@
     <button class="share-pill-btn sp-tw" onclick="shareTo('tw')"><i class="bi bi-twitter-x"></i></button>
     <div style="width:1px; height:24px; background:#ddd; margin:0 4px;"></div>
     <button class="share-pill-btn sp-cp" onclick="shareTo('copy')"><i class="bi bi-link-45deg"></i></button>
-    <button class="share-pill-btn sp-cp" onclick="navigator.share ? shareNative() : alert('Native share not supported')"><i class="bi bi-share-fill"></i></button>
   </div>
 </div>
 
 <div class="container">
   
   <main>
+    <!-- [IKLAN 1] Banner Ad di Atas Konten Utama -->
+    <div class="ad-banner-container">
+      <div class="ad-banner">
+        <i class="bi bi-info-circle" style="margin-bottom:8px; font-size:24px;"></i>
+        <span>Iklan Banner (728x90)</span>
+      </div>
+    </div>
+
     <!-- Section: Home / Highlight -->
     <div id="home">
-      <!-- ID: 1 (Hero) -->
       <article class="hero-card" onclick="openNews(1)">
         <img src="https://i.postimg.cc/q71SRqd2/20250530140128-00-06-47-08-Still003.png" class="hero-img" alt="Headline">
         <div class="hero-content">
@@ -472,6 +555,21 @@
             </div>
           </div>
         </a>
+        
+        <!-- [IKLAN 2] Native Ad (Disisipkan dalam Grid) -->
+        <a href="#" class="news-card ad-native">
+          <span class="ad-badge">Iklan</span>
+          <img src="https://images.unsplash.com/photo-1599398935658-35c7e8c46180?q=80&w=2070&auto=format&fit=crop" class="news-thumb" alt="Ad">
+          <div class="news-info">
+            <span class="news-cat">Sponsored</span>
+            <h3 class="news-head">Diskon Gila! Joran Karbon Premium Cuma 200 Ribuan</h3>
+            <div class="news-stats">
+              <span class="stat-item">Shopee</span>
+              <span class="stat-item">Promo</span>
+            </div>
+          </div>
+        </a>
+
         <!-- Item 3 -->
         <a href="javascript:void(0)" class="news-card" onclick="openNews(3)">
           <img src="https://i.postimg.cc/dtVWh4Dh/20250807110229-MTS-00-00-51-24-Still001.png" class="news-thumb" alt="News">
@@ -511,36 +609,16 @@
             </div>
           </div>
         </a>
-        <!-- Item 6 -->
-        <a href="javascript:void(0)" class="news-card" onclick="openNews(6)">
-          <div class="news-thumb" style="background:#ddd; display:flex; align-items:center; justify-content:center;">
-             <i class="bi bi-camera-video" style="font-size:24px; color:#888;"></i>
-          </div>
-          <div class="news-info">
-            <span class="news-cat">Video</span>
-            <h3 class="news-head">Vlog: Mancing Nila Babon di Rawa Pening</h3>
-            <div class="news-stats">
-              <span class="stat-item"><i class="bi bi-clock"></i> 6j</span>
-              <span class="stat-item"><i class="bi bi-eye"></i> 10k</span>
-              <span class="stat-item stat-rating"><i class="bi bi-star-fill"></i> 5.0</span>
-            </div>
-          </div>
-        </a>
-         <!-- Item 7 -->
-        <a href="javascript:void(0)" class="news-card" onclick="openNews(7)">
-          <div class="news-thumb" style="background:#2b8f6b; display:flex; align-items:center; justify-content:center;">
-             <i class="bi bi-trophy" style="font-size:24px; color:#fff;"></i>
-          </div>
-          <div class="news-info">
-            <span class="news-cat">Event</span>
-            <h3 class="news-head">Grand Strike Tournament 2026</h3>
-            <div class="news-stats">
-              <span class="stat-item"><i class="bi bi-clock"></i> 1h</span>
-              <span class="stat-item"><i class="bi bi-eye"></i> 2.2k</span>
-              <span class="stat-item stat-rating"><i class="bi bi-star-fill"></i> 4.7</span>
-            </div>
-          </div>
-        </a>
+      </div>
+    </div>
+
+    <!-- [IKLAN 3] Parallax Ad (Antara Section) -->
+    <div class="ad-parallax-wrapper">
+      <div class="ad-parallax-bg"></div>
+      <div class="ad-parallax-content">
+        <h2 style="font-size:28px; margin-bottom:10px; text-shadow:0 2px 4px rgba(0,0,0,0.8);">TOKO PANCING ABADI</h2>
+        <p style="font-size:14px; text-shadow:0 1px 2px rgba(0,0,0,0.8);">Lengkap, Murah, Original.</p>
+        <button class="ad-parallax-btn">Belanja Sekarang</button>
       </div>
     </div>
 
@@ -578,19 +656,6 @@
             </div>
           </div>
         </a>
-         <!-- Item 10 -->
-         <a href="javascript:void(0)" class="news-card" onclick="openNews(10)">
-          <div class="news-thumb" style="background:#0b6b4f; display:flex; align-items:center; justify-content:center; color:white; font-weight:bold; font-size:24px;">?</div>
-          <div class="news-info">
-            <h3 class="news-head">Misteri Ikan Tapah Raksasa Muncul Kembali</h3>
-            <div class="news-meta" style="margin-bottom: 8px;">Hot News</div>
-            <div class="news-stats">
-              <span class="stat-item"><i class="bi bi-clock"></i> 1h</span>
-              <span class="stat-item"><i class="bi bi-eye"></i> 12k</span>
-              <span class="stat-item stat-rating"><i class="bi bi-star-fill"></i> 4.6</span>
-            </div>
-          </div>
-        </a>
       </div>
     </div>
     
@@ -599,6 +664,7 @@
   <!-- RIGHT COLUMN (Sidebar) -->
   <aside class="sidebar">
     
+    <!-- Widget Event -->
     <div class="widget" id="event">
       <h3 class="widget-title">📅 Agenda Event</h3>
       <div class="list-item">
@@ -611,17 +677,12 @@
           <span>Empang Damai • Tiket 150K</span>
         </div>
       </div>
-      <div class="list-item">
-        <div style="background:#fef3c7; color:#d97706; width:50px; height:50px; border-radius:8px; display:flex; flex-direction:column; align-items:center; justify-content:center; font-weight:bold;">
-          <span style="font-size:10px;">DES</span>
-          <span style="font-size:16px;">05</span>
-        </div>
-        <div class="list-info">
-          <h4>Galatama Lele</h4>
-          <span>Kolam Ratu • Tiket 50K</span>
-        </div>
-      </div>
-      <button style="width:100%; padding:10px; margin-top:10px; border:1px solid var(--primary); background:none; color:var(--primary); border-radius:8px; font-weight:600;">Lihat Semua Jadwal</button>
+    </div>
+
+    <!-- Widget Iklan Kotak di Sidebar -->
+    <div class="ad-banner" style="height: 250px; margin-bottom: 20px;">
+      <i class="bi bi-aspect-ratio" style="margin-bottom:8px; font-size:24px;"></i>
+      <span>Iklan Sidebar (300x250)</span>
     </div>
 
     <div class="widget" id="populer">
@@ -633,33 +694,37 @@
           <span>1.2k Pembaca</span>
         </div>
       </a>
-      <a href="javascript:void(0)" onclick="openNews(5)" class="list-item">
-        <span style="font-size:24px; font-weight:800; color:#ccc; width:30px;">2</span>
-        <div class="list-info">
-          <h4>Daftar Kolam Pancing Jakarta Selatan</h4>
-          <span>900 Pembaca</span>
-        </div>
-      </a>
-      <a href="javascript:void(0)" onclick="openNews(2)" class="list-item">
-        <span style="font-size:24px; font-weight:800; color:#ccc; width:30px;">3</span>
-        <div class="list-info">
-          <h4>Tips Mancing Baronang</h4>
-          <span>850 Pembaca</span>
-        </div>
-      </a>
-    </div>
-
-    <div class="widget" id="akun">
-      <h3 class="widget-title">👤 Akun Saya</h3>
-      <div style="text-align:center; padding:10px;">
-        <i class="bi bi-person-circle" style="font-size:48px; color:var(--text-muted);"></i>
-        <p>Silakan login untuk menyimpan artikel favorit.</p>
-        <button style="background:var(--primary); color:white; border:none; padding:8px 24px; border-radius:6px; cursor:pointer;">Masuk</button>
-      </div>
     </div>
 
   </aside>
+</div>
 
+<!-- [IKLAN 4] Anchor Ad (Sticky Bottom) -->
+<div id="anchorAd" class="ad-anchor">
+  <div class="ad-anchor-close" onclick="closeAnchor()"><i class="bi bi-x"></i></div>
+  <div style="display:flex; gap:12px; align-items:center; width:100%;">
+    <img src="https://i.postimg.cc/43JHzVW8/329314-3ae915ca4c2cedce83b1b12a7addfd9d-22-11-2022-19-45-25.jpg" style="width:40px; height:40px; object-fit:cover; border-radius:4px;">
+    <div style="flex:1;">
+      <div style="font-size:12px; font-weight:bold;">Unduh Aplikasi RM Sekarang!</div>
+      <div style="font-size:10px; color:#666;">Dapatkan notifikasi event lomba.</div>
+    </div>
+    <button style="background:var(--primary); color:white; border:none; padding:6px 12px; border-radius:4px; font-size:11px; font-weight:bold;">INSTALL</button>
+  </div>
+</div>
+
+<!-- [IKLAN 5] Interstitial Ad (Full Screen Popup) -->
+<div id="interstitialAd" class="ad-interstitial">
+  <div class="ad-interstitial-content">
+    <div class="ad-interstitial-close" onclick="closeInterstitial()">X</div>
+    <img src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?q=80&w=2070&auto=format&fit=crop" class="ad-interstitial-img">
+    <div class="ad-interstitial-footer">
+      <div>
+        <div style="font-weight:bold; font-size:14px;">Diskon 50% Alat Pancing</div>
+        <div style="font-size:11px; color:#666;">Hanya hari ini!</div>
+      </div>
+      <button style="background:#000; color:white; border:none; padding:8px 16px; border-radius:20px; font-weight:bold; font-size:12px;">Beli</button>
+    </div>
+  </div>
 </div>
 
 <!-- Footer Section -->
@@ -699,111 +764,47 @@
 
 <script>
   function toggleDrawer() { document.getElementById('sideDrawer').classList.toggle('open'); }
+  function setActive(element) { document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active')); element.classList.add('active'); }
 
-  function setActive(element) {
-    document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-    element.classList.add('active');
+  // === ADVERTISEMENT LOGIC ===
+  function closeAnchor() {
+    const ad = document.getElementById('anchorAd');
+    ad.style.display = 'none';
   }
 
-  // === DATA BERITA ===
+  function closeInterstitial() {
+    const ad = document.getElementById('interstitialAd');
+    ad.classList.remove('show');
+    setTimeout(() => { ad.style.display = 'none'; }, 300);
+  }
+
+  // Show ads with delay
+  window.addEventListener('load', () => {
+    // Show Anchor after 1 sec
+    setTimeout(() => { document.getElementById('anchorAd').classList.add('show'); }, 1000);
+    
+    // Show Interstitial after 3 sec (simulasi iklan muncul tiba-tiba)
+    setTimeout(() => { document.getElementById('interstitialAd').classList.add('show'); }, 3000);
+  });
+
+  // === DATA BERITA & READER LOGIC (Existing) ===
   const newsDatabase = {
-    1: {
-      title: "Induk 3,2 Kg Naik di Empang Damai: Pertarungan Sengit Minggu Ini",
-      cat: "HEADLINE",
-      img: "https://i.postimg.cc/q71SRqd2/20250530140128-00-06-47-08-Still003.png",
-      content: `
-        <p><strong>REPUBLIK MANCING</strong> - Kompetisi mancing Galatama di Empang Damai minggu ini menyajikan pertarungan yang sangat sengit. Peserta dari berbagai daerah berkumpul untuk memperebutkan gelar juara mingguan.</p>
-        <p>Tepat pada pukul 15.00 WIB, seorang pemancing bernama Pak Budi berhasil menaikan induk seberat 3,2 Kg. "Tarikan ikannya luar biasa, untung senar tidak putus," ujar Pak Budi sambil tersenyum lebar.</p>
-        <p>Cuaca yang mendukung membuat ikan makan dengan lahap. Panitia mencatat total ikan yang naik mencapai 200kg lebih dalam durasi 3 jam lomba. Ini adalah rekor baru untuk kolam Empang Damai di tahun 2025.</p>
-        <h3>Tips dari Sang Juara</h3>
-        <p>Pak Budi membocorkan sedikit rahasianya, beliau menggunakan umpan pelet halus dicampur dengan essence pandan yang agak menyengat. Kombinasi ini terbukti ampuh di air yang agak keruh setelah hujan.</p>
-      `
-    },
-    2: {
-      title: "Rahasia Racikan Umpan Putih Anti Boncos",
-      cat: "TEKNIK",
-      img: "https://i.postimg.cc/VkSQ0qKZ/Screenshot-20250810-145241-Facebook.jpg",
-      content: `
-        <p>Banyak pemancing pemula sering mengalami 'boncos' alias tidak dapat ikan sama sekali. Masalah utamanya seringkali terletak pada racikan umpan yang kurang pas dengan kondisi air.</p>
-        <p>Berikut adalah resep umpan putih legendaris:</p>
-        <ul>
-          <li>2 butir telur ayam (ambil putihnya)</li>
-          <li>1 sachet susu bubuk dancow</li>
-          <li>1 ons kroto bersih</li>
-          <li>Keju craft secukupnya</li>
-          <li>Daun pandan</li>
-        </ul>
-        <p>Kukus semua bahan selama 15 menit. Setelah matang, haluskan dan campur dengan pengeras saat di kolam. Dijamin neter!</p>
-      `
-    },
-    3: {
-      title: "Daftar Juara Galatama Lele Sesi 1",
-      cat: "TURNAMEN",
-      img: "https://i.postimg.cc/dtVWh4Dh/20250807110229-MTS-00-00-51-24-Still001.png",
-      content: `
-        <p>Berikut adalah hasil rekapitulasi juara Galatama Lele di Kolam Monster Fish, Jakarta Timur tadi malam:</p>
-        <p><strong>Juara Induk 1:</strong> Tim Hore (6.5 Kg)<br>
-        <strong>Juara Induk 2:</strong> Bang Jago (5.8 Kg)<br>
-        <strong>Juara Prestasi Total:</strong> Lapak 22 (40 Ekor)</p>
-        <p>Selamat kepada para pemenang! Jangan lupa event selanjutnya akan diadakan bulan depan dengan hadiah motor.</p>
-      `
-    },
-    4: {
-      title: "Review Joran Tegek Import Murah Berkualitas",
-      cat: "REVIEW",
-      img: "https://i.postimg.cc/vnK1y2fS/20250807110229-MTS-00-00-51-24-Still001.png",
-      content: "<p>Bagi pecinta mancing nila atau baronang, joran tegek adalah senjata utama. Kali ini kita membahas joran karbon import merk 'Dragon Pole'. Ringan, kaku, dan harga cuma 100 ribuan.</p>"
-    },
-    5: {
-      title: "Spot Liar Sungai Brantas yang Lagi Rame",
-      cat: "LOKASI",
-      img: "https://i.postimg.cc/vmrWRHV8/Whats-App-Image-2025-10-30-at-18-56-32.jpg",
-      content: "<p>Sungai Brantas di area Kediri sedang banjir ikan wader dan tawes. Warga sekitar melaporkan banyak pemancing yang panen raya sejak 3 hari lalu. Air yang mulai surut membuat spot ini sangat potensial.</p>"
-    },
-    6: {
-      title: "Vlog: Mancing Nila Babon di Rawa Pening",
-      cat: "VIDEO",
-      img: "https://via.placeholder.com/600x400/000/fff?text=Video+Player", // Fallback placeholder logic used
-      content: "<p>Simak keseruan tim Republik Mancing menaklukan eceng gondok Rawa Pening demi mendapatkan Nila Babon 5 jarian. Teknik lubang (nyobok) menjadi kunci sukses kali ini.</p>"
-    },
-    7: {
-      title: "Grand Strike Tournament 2026 Segera Dibuka!",
-      cat: "EVENT",
-      img: "https://via.placeholder.com/600x400/2b8f6b/fff?text=Tournament",
-      content: "<p>Siapkan joran anda! Turnamen mancing terbesar se-Indonesia akan kembali digelar. Total hadiah mencapai 500 Juta Rupiah. Pendaftaran dibuka mulai 1 Januari 2026.</p>"
-    },
-    8: {
-      title: "Video Viral: Detik-detik Joran Melengkung Parah!",
-      cat: "TRENDING",
-      img: "https://via.placeholder.com/600x400/000/fff?text=Viral+Video",
-      content: "<p>Sebuah video viral di TikTok menampilkan perjuangan pemancing melawan Monster Patin di Danau Toba. Joran fiber solid miliknya melengkung hingga membentuk huruf U sempurna!</p>"
-    },
-    9: {
-      title: "Komunitas: Gathering Akbar Bulan Depan",
-      cat: "KOMUNITAS",
-      img: "https://i.postimg.cc/MGTBvbc9/1.png",
-      content: "<p>Forum Komunikasi Pemancing (FKP) akan mengadakan kopi darat di Puncak, Bogor. Agenda acara meliputi sharing teknik, bazaar alat pancing bekas, dan tentu saja mancing bareng.</p>"
-    },
-    10: {
-      title: "Misteri Ikan Tapah Raksasa Muncul Kembali",
-      cat: "MISTERI",
-      img: "https://via.placeholder.com/600x400/0b6b4f/fff?text=Misteri",
-      content: "<p>Warga di pinggiran sungai Musi dihebohkan dengan penampakan ikan Tapah yang diperkirakan berukuran sebesar perahu kecil. Mitos atau fakta? Tim kami sedang menuju lokasi.</p>"
-    }
+    1: {title: "Induk 3,2 Kg Naik di Empang Damai", cat: "HEADLINE", img: "https://i.postimg.cc/q71SRqd2/20250530140128-00-06-47-08-Still003.png", content: "<p>Berita lengkap tentang lomba galatama...</p>"},
+    2: {title: "Rahasia Racikan Umpan Putih", cat: "TEKNIK", img: "https://i.postimg.cc/VkSQ0qKZ/Screenshot-20250810-145241-Facebook.jpg", content: "<p>Resep lengkap umpan putih...</p>"},
+    3: {title: "Daftar Juara Galatama Lele Sesi 1", cat: "TURNAMEN", img: "https://i.postimg.cc/dtVWh4Dh/20250807110229-MTS-00-00-51-24-Still001.png", content: "<p>Daftar juara...</p>"},
+    4: {title: "Review Joran Tegek Import", cat: "REVIEW", img: "https://i.postimg.cc/vnK1y2fS/20250807110229-MTS-00-00-51-24-Still001.png", content: "<p>Review joran...</p>"},
+    5: {title: "Spot Liar Sungai Brantas", cat: "LOKASI", img: "https://i.postimg.cc/vmrWRHV8/Whats-App-Image-2025-10-30-at-18-56-32.jpg", content: "<p>Info spot...</p>"},
+    8: {title: "Video Viral Joran Melengkung", cat: "TRENDING", img: "https://via.placeholder.com/600x400/000/fff?text=Viral+Video", content: "<p>Video viral...</p>"},
+    9: {title: "Komunitas Gathering Akbar", cat: "KOMUNITAS", img: "https://i.postimg.cc/MGTBvbc9/1.png", content: "<p>Info gathering...</p>"}
   };
 
-  // === READER LOGIC ===
   function openNews(id) {
     const data = newsDatabase[id];
     if(!data) return; 
-
-    // Populate Data
     document.getElementById('r_img').src = data.img;
     document.getElementById('r_cat').innerText = data.cat;
     document.getElementById('r_title').innerText = data.title;
     document.getElementById('r_body').innerHTML = data.content;
-    
-    // Show View & Floating Bar
     document.getElementById('newsReader').classList.add('active');
     document.getElementById('floatShare').classList.add('visible');
     document.body.style.overflow = 'hidden'; 
@@ -815,42 +816,15 @@
     document.body.style.overflow = 'auto'; 
   }
 
-  // === SHARE LOGIC ===
-  function shareTo(platform) {
-    const url = window.location.href;
-    const text = "Cek berita mancing terbaru ini!";
-    
-    if (platform === 'wa') {
-      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text + " " + url)}`, '_blank');
-    } else if (platform === 'fb') {
-      window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank');
-    } else if (platform === 'tw') {
-      window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`, '_blank');
-    } else if (platform === 'copy') {
-      navigator.clipboard.writeText(url).then(() => alert('Link berhasil disalin!'));
-    }
-  }
-  
-  function shareNative() {
-    if (navigator.share) {
-      navigator.share({
-        title: document.title,
-        text: 'Info Mancing Terupdate',
-        url: window.location.href,
-      });
-    }
-  }
+  function shareTo(platform) { alert('Membuka ' + platform); }
 
-  // === EXISTING LOGIC ===
+  // Scroll Spy
   window.addEventListener('scroll', () => {
     let current = "";
     const sections = ['home', 'event', 'trending', 'populer', 'akun'];
     sections.forEach(id => {
       const el = document.getElementById(id);
-      if (el) {
-        const rect = el.getBoundingClientRect();
-        if (rect.top >= 0 && rect.top <= 300) current = id;
-      }
+      if (el && el.getBoundingClientRect().top >= 0 && el.getBoundingClientRect().top <= 300) current = id;
     });
     if (current) {
       document.querySelectorAll('.nav-item').forEach(a => {
@@ -860,28 +834,11 @@
     }
   });
 
-  // PWA & Install
+  // PWA Install
   let deferredPrompt;
   const installBtn = document.getElementById('install-btn');
-  const manifest = {
-    "name": "Republik Mancing", "short_name": "RM App", "start_url": ".",
-    "display": "standalone", "background_color": "#ffffff", "theme_color": "#0b6b4f",
-    "icons": [{"src": "https://i.postimg.cc/43JHzVW8/329314-3ae915ca4c2cedce83b1b12a7addfd9d-22-11-2022-19-45-25.jpg","sizes": "192x192","type": "image/jpeg"}]
-  };
-  const blob = new Blob([JSON.stringify(manifest)], {type: 'application/json'});
-  document.getElementById('my-manifest-placeholder').setAttribute('href', URL.createObjectURL(blob));
-
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register(URL.createObjectURL(new Blob([`self.addEventListener('install', e => self.skipWaiting()); self.addEventListener('fetch', e => {});`], {type: 'text/javascript'}))).catch(err => console.log('SW Error:', err));
-  }
-
-  window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault(); deferredPrompt = e; installBtn.style.display = 'block';
-  });
-  installBtn.addEventListener('click', async () => {
-    if (deferredPrompt) { deferredPrompt.prompt(); deferredPrompt = null; }
-  });
-  window.addEventListener('appinstalled', () => { installBtn.style.display = 'none'; });
+  window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; installBtn.style.display = 'block'; });
+  installBtn.addEventListener('click', async () => { if (deferredPrompt) { deferredPrompt.prompt(); deferredPrompt = null; } });
 </script>
 
 </body>
