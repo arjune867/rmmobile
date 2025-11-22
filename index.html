@@ -78,22 +78,58 @@
     .mobile-actions { display: flex; gap: 16px; align-items: center; }
     .icon-btn { font-size: 22px; cursor: pointer; color: var(--text-main); }
 
+    /* === RUNNING TEXT / TICKER (Modern Emerald) === */
+    .ticker-wrap {
+      background: linear-gradient(90deg, #059669 0%, #047857 100%);
+      color: #ecfdf5; 
+      height: 42px; 
+      display: flex; align-items: center;
+      overflow: hidden; position: sticky;
+      top: calc(var(--header-height) + var(--sat));
+      z-index: 40; 
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      box-shadow: 0 4px 10px -2px rgba(4, 120, 87, 0.4);
+    }
+    
+    .ticker-tag {
+      background: #064e3b; color: #34d399; height: 100%;
+      display: flex; align-items: center; padding: 0 20px 0 16px;
+      font-weight: 900; font-size: 12px; text-transform: uppercase;
+      letter-spacing: 0.5px; z-index: 2; flex-shrink: 0; position: relative;
+      clip-path: polygon(0 0, 100% 0, 90% 100%, 0% 100%);
+      padding-right: 30px; 
+    }
+    
+    .ticker-tag i {
+      animation: pulse-red 1.5s infinite;
+      margin-right: 6px; color: #ef4444; font-size: 14px;
+    }
+
+    .ticker-content {
+      display: inline-block; white-space: nowrap; padding-left: 100%;
+      animation: marquee 35s linear infinite; font-size: 13px; font-weight: 500;
+    }
+    
+    .ticker-content span { margin-right: 32px; display: inline-flex; align-items: center; gap: 8px; opacity: 0.95; }
+
+    @keyframes marquee { 0% { transform: translate(0, 0); } 100% { transform: translate(-100%, 0); } }
+    @keyframes pulse-red {
+      0% { text-shadow: 0 0 0 rgba(239, 68, 68, 0.4); transform: scale(1); }
+      50% { text-shadow: 0 0 8px rgba(239, 68, 68, 0.8); transform: scale(1.1); }
+      100% { text-shadow: 0 0 0 rgba(239, 68, 68, 0.4); transform: scale(1); }
+    }
+
     /* === LAYOUT GRID === */
     .container {
-      max-width: var(--max-width);
-      margin: 0 auto;
-      padding: 20px 16px;
-      display: grid;
-      grid-template-columns: 1fr 300px; /* Konten Utama + Sidebar Kanan */
-      gap: 24px;
-      align-items: start;
+      max-width: var(--max-width); margin: 0 auto; padding: 20px 16px;
+      display: grid; grid-template-columns: 1fr 300px; gap: 24px; align-items: start;
     }
 
     /* === MAIN CONTENT === */
-    /* Hero Section */
     .hero-card {
       background: var(--surface); border-radius: 16px; overflow: hidden;
       box-shadow: var(--shadow); margin-bottom: 24px; position: relative;
+      cursor: pointer; /* Menandakan bisa diklik */
     }
     .hero-img { width: 100%; height: 300px; object-fit: cover; display: block; }
     .hero-content { padding: 20px; }
@@ -104,15 +140,9 @@
     }
     .hero-title { margin: 0 0 10px; font-size: 22px; line-height: 1.3; }
 
-    /* News Grid 3 Columns Logic */
     .section-title { font-size: 18px; font-weight: 800; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
     
-    .news-grid {
-      display: grid;
-      /* Default 3 Kolom sesuai request */
-      grid-template-columns: repeat(3, 1fr); 
-      gap: 16px;
-    }
+    .news-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
     
     .news-card {
       background: var(--surface); border-radius: 12px; overflow: hidden;
@@ -126,7 +156,16 @@
     .news-head { font-size: 13px; font-weight: 700; line-height: 1.4; margin: 0 0 8px; flex: 1; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;}
     .news-meta { font-size: 11px; color: var(--text-muted); margin-top: auto; }
 
-    /* === SIDEBAR (Widget Kanan) === */
+    /* Stats */
+    .news-stats {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-top: auto; padding-top: 8px; border-top: 1px solid #f3f4f6;
+      font-size: 10px; color: var(--text-muted);
+    }
+    .stat-item { display: flex; align-items: center; gap: 3px; }
+    .stat-rating { color: #f59e0b; font-weight: 700; }
+
+    /* === SIDEBAR === */
     .sidebar { display: flex; flex-direction: column; gap: 20px; }
     .widget { background: var(--surface); border-radius: 16px; padding: 20px; box-shadow: var(--shadow); }
     .widget-title { font-size: 16px; font-weight: 700; margin: 0 0 16px; border-bottom: 2px solid var(--bg); padding-bottom: 8px; }
@@ -136,19 +175,17 @@
     .list-info h4 { margin: 0; font-size: 14px; font-weight: 600; line-height: 1.3; }
     .list-info span { font-size: 12px; color: var(--text-muted); }
 
-    /* === SIDE DRAWER (Menu Samping) === */
+    /* === SIDE DRAWER === */
     .side-drawer {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       z-index: 2000; visibility: hidden; transition: visibility 0.3s;
     }
     .side-drawer.open { visibility: visible; }
-    
     .drawer-overlay {
       position: absolute; top: 0; left: 0; width: 100%; height: 100%;
       background: rgba(0,0,0,0.5); opacity: 0; transition: opacity 0.3s;
     }
     .side-drawer.open .drawer-overlay { opacity: 1; }
-    
     .drawer-content {
       position: relative; width: 280px; height: 100%;
       background: var(--surface); padding: 24px;
@@ -158,20 +195,86 @@
       box-shadow: 2px 0 10px rgba(0,0,0,0.1);
     }
     .side-drawer.open .drawer-content { transform: translateX(0); }
-    
     .drawer-link {
-      display: flex; align-items: center; gap: 12px;
-      padding: 12px; border-radius: 8px;
-      text-decoration: none; color: var(--text-main);
-      font-weight: 600; font-size: 15px;
+      display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 8px;
+      text-decoration: none; color: var(--text-main); font-weight: 600; font-size: 15px;
       transition: background 0.2s;
     }
     .drawer-link:hover { background: var(--bg); color: var(--primary); }
-    .drawer-link i { font-size: 18px; color: var(--text-muted); }
     .drawer-link.active { background: #e6fcf5; color: var(--primary); }
-    .drawer-link.active i { color: var(--primary); }
 
-    /* === BOTTOM NAVBAR (Mobile Only) === */
+    /* === NEWS READER VIEW (Full Page Detail) === */
+    .reader-view {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: #ffffff; z-index: 5000;
+      transform: translateX(100%); transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+      overflow-y: auto; display: flex; flex-direction: column;
+    }
+    .reader-view.active { transform: translateX(0); }
+    
+    .reader-header {
+      position: sticky; top: 0; background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+      padding: 12px 16px; border-bottom: 1px solid #eee; z-index: 10;
+      display: flex; align-items: center; justify-content: space-between;
+      padding-top: calc(12px + var(--sat));
+    }
+    .reader-back { border: none; background: transparent; font-size: 24px; padding: 0; display:flex; align-items:center; gap:8px; font-weight:600; cursor: pointer; color: var(--text-main);}
+    
+    .reader-hero { width: 100%; height: 250px; object-fit: cover; }
+    .reader-content { padding: 20px; padding-bottom: 100px; /* Extra space for floating bar */ max-width: 800px; margin: 0 auto; }
+    .reader-meta { font-size: 12px; color: var(--text-muted); margin-bottom: 12px; display:flex; gap:10px; align-items:center; }
+    .reader-title { font-size: 24px; font-weight: 800; line-height: 1.3; margin: 0 0 16px; color: #111; }
+    .reader-body { font-size: 16px; line-height: 1.8; color: #333; }
+    .reader-body p { margin-bottom: 16px; }
+
+    /* === FLOATING SHARE BAR === */
+    .floating-share-bar {
+      position: fixed; bottom: 30px; left: 50%; 
+      transform: translateX(-50%) translateY(120px); /* Hidden by default */
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.8);
+      padding: 8px 8px; border-radius: 50px;
+      display: flex; gap: 8px; align-items: center;
+      box-shadow: 0 10px 30px -5px rgba(0,0,0,0.2);
+      z-index: 5010; 
+      transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+      width: auto; max-width: 90%;
+    }
+    
+    .floating-share-bar.visible {
+      transform: translateX(-50%) translateY(0);
+    }
+    
+    .share-pill-btn {
+      width: 44px; height: 44px; border-radius: 50%; border: none;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; font-size: 18px; transition: all 0.2s;
+      background: transparent; color: #555; position: relative;
+    }
+    
+    .share-pill-btn:hover { background: #f3f4f6; transform: translateY(-3px); }
+    .share-pill-btn:active { transform: scale(0.95); }
+    
+    /* Social Colors */
+    .sp-wa { color: #25D366; background: rgba(37, 211, 102, 0.1); }
+    .sp-wa:hover { background: #25D366; color: white; }
+    
+    .sp-fb { color: #1877F2; background: rgba(24, 119, 242, 0.1); }
+    .sp-fb:hover { background: #1877F2; color: white; }
+    
+    .sp-tw { color: #000; background: rgba(0, 0, 0, 0.05); }
+    .sp-tw:hover { background: #000; color: white; }
+    
+    .sp-cp { color: #666; }
+    
+    .share-label {
+      font-size: 11px; font-weight: 800; text-transform: uppercase;
+      color: var(--text-muted); margin-left: 12px; margin-right: 4px;
+    }
+
+    /* === BOTTOM NAVBAR === */
     .bottom-nav {
       position: fixed; bottom: 0; left: 0; right: 0;
       background: rgba(255, 255, 255, 0.95);
@@ -179,60 +282,55 @@
       border-top: 1px solid var(--border);
       height: calc(var(--bottom-nav-height) + var(--sab));
       padding-bottom: var(--sab);
-      display: grid;
-      grid-template-columns: repeat(5, 1fr); /* 5 Icons Grid */
-      z-index: 100;
+      display: grid; grid-template-columns: repeat(5, 1fr); z-index: 100;
     }
     .nav-item {
       display: flex; flex-direction: column; align-items: center; justify-content: center;
-      text-decoration: none; color: var(--text-muted);
-      font-size: 10px; font-weight: 500; gap: 4px;
-      transition: all 0.2s;
+      text-decoration: none; color: var(--text-muted); font-size: 10px; font-weight: 500; gap: 4px;
     }
-    .nav-item i { font-size: 20px; margin-bottom: 2px; transition: transform 0.2s; }
+    .nav-item i { font-size: 20px; transition: transform 0.2s; }
     .nav-item.active { color: var(--primary); }
     .nav-item.active i { transform: translateY(-2px); }
+
+    /* === FOOTER & SOCIAL === */
+    footer {
+      background: var(--surface); border-top: 1px solid var(--border);
+      padding: 40px 16px; margin-top: 40px; text-align: center;
+      padding-bottom: calc(var(--bottom-nav-height) + var(--sab) + 20px); 
+    }
+    @media (min-width: 900px) { footer { padding-bottom: 40px; } }
+    .social-links { display: flex; gap: 12px; justify-content: center; margin-top: 16px; flex-wrap: wrap; }
+    .social-btn { 
+      width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      background: #f0f2f5; color: #555; text-decoration: none; transition: all 0.2s; font-size: 18px; 
+    }
+    .social-btn:hover { transform: translateY(-3px); box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+    .sb-fb:hover { background: #1877F2; color: white; }
+    .sb-ig:hover { background: #E4405F; color: white; }
+    .sb-yt:hover { background: #FF0000; color: white; }
+    .sb-tt:hover { background: #000000; color: white; }
+    .sb-wa:hover { background: #25D366; color: white; }
+
+    /* === RESPONSIVE === */
+    @media (min-width: 900px) {
+      .desktop-nav { display: flex; } .bottom-nav { display: none; }
+      .mobile-actions .bi-list { display: none; } body { padding-bottom: 0; }
+    }
+    @media (max-width: 899px) {
+      .container { grid-template-columns: 1fr; } .sidebar { order: 2; }
+      .news-grid { grid-template-columns: repeat(2, 1fr); } 
+      .hero-img { height: 200px; } .hero-title { font-size: 18px; }
+    }
+    @media (min-width: 600px) and (max-width: 899px) { .news-grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 380px) { .news-grid { grid-template-columns: repeat(2, 1fr); gap:10px; } }
     
-    /* Install Button */
+    /* Install Btn */
     .install-pwa {
       background: var(--text-main); color: white; border: none;
       padding: 10px 20px; border-radius: 50px; font-weight: 600;
       position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%);
       z-index: 90; box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-      display: none; animation: slideUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      cursor: pointer;
-    }
-    @keyframes slideUp { from { transform: translate(-50%, 100%); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }
-
-    /* === RESPONSIVE RULES === */
-    @media (min-width: 900px) {
-      .desktop-nav { display: flex; }
-      .bottom-nav { display: none; }
-      .mobile-actions .bi-list { display: none; } /* Hide hamburger on desktop */
-      body { padding-bottom: 0; }
-    }
-
-    @media (max-width: 899px) {
-      .container { grid-template-columns: 1fr; }
-      .sidebar { order: 2; }
-      
-      /* Mobile Grid Adjustment: 
-         User request: "Grid 3 Kolom". 
-         However, on very small screens (under 400px), 3 columns is too tight.
-         We keep 3 columns for tablets/large phones, but switch to 2 for small phones for readability.
-      */
-      .news-grid { grid-template-columns: repeat(2, 1fr); } 
-      .hero-img { height: 200px; }
-      .hero-title { font-size: 18px; }
-    }
-    
-    /* Extra logic for Tablets to respect the 3-column request before dropping to 2 */
-    @media (min-width: 600px) and (max-width: 899px) {
-       .news-grid { grid-template-columns: repeat(3, 1fr); }
-    }
-    
-    @media (max-width: 380px) {
-      .news-grid { grid-template-columns: repeat(2, 1fr); gap:10px; } /* Force 2 cols minimal */
+      display: none; cursor: pointer;
     }
   </style>
 </head>
@@ -245,8 +343,6 @@
       <img src="https://i.postimg.cc/43JHzVW8/329314-3ae915ca4c2cedce83b1b12a7addfd9d-22-11-2022-19-45-25.jpg" class="logo" alt="RM">
       <span class="brand-name">Republik Mancing</span>
     </a>
-    
-    <!-- Menu Desktop -->
     <nav class="desktop-nav">
       <a href="#home" class="active">Home</a>
       <a href="#event">Event</a>
@@ -254,17 +350,28 @@
       <a href="#populer">Populer</a>
       <a href="#akun">Akun</a>
     </nav>
-
-    <!-- Mobile Actions -->
     <div class="mobile-actions">
       <i class="bi bi-search icon-btn"></i>
-      <!-- Hamburger Menu (Garis 3) -->
       <i class="bi bi-list icon-btn" onclick="toggleDrawer()"></i>
     </div>
   </div>
 </header>
 
-<!-- Side Drawer (Menu Samping) -->
+<!-- Running Text -->
+<div class="ticker-wrap">
+  <div class="ticker-tag"><i class="bi bi-fire"></i> HOT NEWS</div>
+  <div class="ticker-content">
+    <span>Rahasia Racikan Umpan Putih Anti Boncos</span>
+    <span><i class="bi bi-circle-fill" style="font-size:4px; opacity:0.5;"></i></span>
+    <span>Daftar Juara Galatama Lele Sesi 1</span>
+    <span><i class="bi bi-circle-fill" style="font-size:4px; opacity:0.5;"></i></span>
+    <span>Joran Tegek Import Murah Berkualitas</span>
+    <span><i class="bi bi-circle-fill" style="font-size:4px; opacity:0.5;"></i></span>
+    <span>Spot Liar Sungai Brantas yang Rame</span>
+  </div>
+</div>
+
+<!-- Side Drawer -->
 <div id="sideDrawer" class="side-drawer">
   <div class="drawer-overlay" onclick="toggleDrawer()"></div>
   <div class="drawer-content">
@@ -272,32 +379,73 @@
        <img src="https://i.postimg.cc/43JHzVW8/329314-3ae915ca4c2cedce83b1b12a7addfd9d-22-11-2022-19-45-25.jpg" width="40" style="border-radius:8px;">
        <h3 style="margin:0; font-size:18px;">Menu</h3>
     </div>
-    
-    <a href="#home" class="drawer-link" onclick="toggleDrawer()">
-      <i class="bi bi-house-door"></i> Home
-    </a>
-    <a href="#event" class="drawer-link" onclick="toggleDrawer()">
-      <i class="bi bi-calendar-event"></i> Event
-    </a>
-    <a href="#trending" class="drawer-link" onclick="toggleDrawer()">
-      <i class="bi bi-graph-up-arrow"></i> Trending
-    </a>
+    <a href="#home" class="drawer-link" onclick="toggleDrawer()"><i class="bi bi-house-door"></i> Home</a>
+    <a href="#event" class="drawer-link" onclick="toggleDrawer()"><i class="bi bi-calendar-event"></i> Event</a>
+    <a href="#trending" class="drawer-link" onclick="toggleDrawer()"><i class="bi bi-graph-up-arrow"></i> Trending</a>
     <hr style="border:0; border-top:1px solid #eee; width:100%; margin:8px 0;">
-    <a href="#akun" class="drawer-link" onclick="toggleDrawer()">
-      <i class="bi bi-person"></i> Akun Saya
-    </a>
-    
+    <a href="#akun" class="drawer-link" onclick="toggleDrawer()"><i class="bi bi-person"></i> Akun Saya</a>
+
+    <div style="margin-top: 20px; padding: 0 12px;">
+      <h4 style="margin: 0 0 10px; font-size: 13px; color: var(--text-muted); text-transform:uppercase; letter-spacing:0.5px;">Ikuti Kami</h4>
+      <div class="social-links" style="justify-content: flex-start;">
+          <a href="#" class="social-btn sb-fb"><i class="bi bi-facebook"></i></a>
+          <a href="#" class="social-btn sb-ig"><i class="bi bi-instagram"></i></a>
+          <a href="#" class="social-btn sb-yt"><i class="bi bi-youtube"></i></a>
+          <a href="#" class="social-btn sb-tt"><i class="bi bi-tiktok"></i></a>
+          <a href="#" class="social-btn sb-wa"><i class="bi bi-whatsapp"></i></a>
+      </div>
+    </div>
     <button onclick="toggleDrawer()" style="margin-top:auto; background:#eee; border:none; padding:10px; border-radius:8px; width:100%; font-weight:600; color:#555;">Tutup Menu</button>
+  </div>
+</div>
+
+<!-- NEWS READER OVERLAY (FULL PAGE) -->
+<div id="newsReader" class="reader-view">
+  <div class="reader-header">
+    <button class="reader-back" onclick="closeNews()">
+      <i class="bi bi-arrow-left"></i> Kembali
+    </button>
+    <div style="display:flex; gap:16px;">
+      <i class="bi bi-bookmark" style="font-size:20px; cursor:pointer;" onclick="alert('Berita disimpan!')"></i>
+    </div>
+  </div>
+  
+  <img src="" id="r_img" class="reader-hero" alt="Cover">
+  
+  <div class="reader-content">
+    <span id="r_cat" style="color:var(--primary); font-weight:700; font-size:12px; text-transform:uppercase;">CATEGORY</span>
+    <h1 id="r_title" class="reader-title">Title Here</h1>
+    
+    <div class="reader-meta">
+       <img src="https://i.postimg.cc/43JHzVW8/329314-3ae915ca4c2cedce83b1b12a7addfd9d-22-11-2022-19-45-25.jpg" width="24" height="24" style="border-radius:50%;">
+       <span>Oleh <strong>Admin</strong></span> • <span id="r_date">22 Nov 2025</span>
+    </div>
+    <hr style="border:0; border-top:1px solid #eee; margin-bottom:20px;">
+    
+    <div id="r_body" class="reader-body">
+      <!-- Content Injected Here -->
+    </div>
+  </div>
+  
+  <!-- FLOATING SHARE BUTTONS (MELAYANG DI BAWAH) -->
+  <div id="floatShare" class="floating-share-bar">
+    <span class="share-label">Bagikan:</span>
+    <button class="share-pill-btn sp-wa" onclick="shareTo('wa')"><i class="bi bi-whatsapp"></i></button>
+    <button class="share-pill-btn sp-fb" onclick="shareTo('fb')"><i class="bi bi-facebook"></i></button>
+    <button class="share-pill-btn sp-tw" onclick="shareTo('tw')"><i class="bi bi-twitter-x"></i></button>
+    <div style="width:1px; height:24px; background:#ddd; margin:0 4px;"></div>
+    <button class="share-pill-btn sp-cp" onclick="shareTo('copy')"><i class="bi bi-link-45deg"></i></button>
+    <button class="share-pill-btn sp-cp" onclick="navigator.share ? shareNative() : alert('Native share not supported')"><i class="bi bi-share-fill"></i></button>
   </div>
 </div>
 
 <div class="container">
   
-  <!-- LEFT COLUMN (Main Content) -->
   <main>
     <!-- Section: Home / Highlight -->
     <div id="home">
-      <article class="hero-card">
+      <!-- ID: 1 (Hero) -->
+      <article class="hero-card" onclick="openNews(1)">
         <img src="https://i.postimg.cc/q71SRqd2/20250530140128-00-06-47-08-Still003.png" class="hero-img" alt="Headline">
         <div class="hero-content">
           <span class="badge">Headline</span>
@@ -310,64 +458,87 @@
         <i class="bi bi-lightning-charge-fill" style="color: gold;"></i> Terkini
       </div>
       
-      <!-- Grid 3 Kolom (Desktop) / 2 Kolom (Mobile) -->
       <div class="news-grid">
-        <!-- Item 1 -->
-        <a href="#" class="news-card">
+        <!-- Item 2 -->
+        <a href="javascript:void(0)" class="news-card" onclick="openNews(2)">
           <img src="https://i.postimg.cc/VkSQ0qKZ/Screenshot-20250810-145241-Facebook.jpg" class="news-thumb" alt="News">
           <div class="news-info">
             <span class="news-cat">Teknik</span>
             <h3 class="news-head">Rahasia Racikan Umpan Putih Anti Boncos</h3>
-            <div class="news-meta">10 Menit lalu</div>
+            <div class="news-stats">
+              <span class="stat-item"><i class="bi bi-clock"></i> 10m</span>
+              <span class="stat-item"><i class="bi bi-eye"></i> 3.4k</span>
+              <span class="stat-item stat-rating"><i class="bi bi-star-fill"></i> 4.9</span>
+            </div>
           </div>
         </a>
-        <!-- Item 2 -->
-        <a href="#" class="news-card">
+        <!-- Item 3 -->
+        <a href="javascript:void(0)" class="news-card" onclick="openNews(3)">
           <img src="https://i.postimg.cc/dtVWh4Dh/20250807110229-MTS-00-00-51-24-Still001.png" class="news-thumb" alt="News">
           <div class="news-info">
             <span class="news-cat">Turnamen</span>
             <h3 class="news-head">Daftar Juara Galatama Lele Sesi 1</h3>
-            <div class="news-meta">1 Jam lalu</div>
+            <div class="news-stats">
+              <span class="stat-item"><i class="bi bi-clock"></i> 1j</span>
+              <span class="stat-item"><i class="bi bi-eye"></i> 1.2k</span>
+              <span class="stat-item stat-rating"><i class="bi bi-star-fill"></i> 4.5</span>
+            </div>
           </div>
         </a>
-        <!-- Item 3 -->
-        <a href="#" class="news-card">
+        <!-- Item 4 -->
+        <a href="javascript:void(0)" class="news-card" onclick="openNews(4)">
           <img src="https://i.postimg.cc/vnK1y2fS/20250807110229-MTS-00-00-51-24-Still001.png" class="news-thumb" alt="News">
           <div class="news-info">
             <span class="news-cat">Review</span>
             <h3 class="news-head">Joran Tegek Import Murah Berkualitas</h3>
-            <div class="news-meta">3 Jam lalu</div>
+            <div class="news-stats">
+              <span class="stat-item"><i class="bi bi-clock"></i> 3j</span>
+              <span class="stat-item"><i class="bi bi-eye"></i> 856</span>
+              <span class="stat-item stat-rating"><i class="bi bi-star-fill"></i> 4.2</span>
+            </div>
           </div>
         </a>
-        <!-- Item 4 -->
-        <a href="#" class="news-card">
+        <!-- Item 5 -->
+        <a href="javascript:void(0)" class="news-card" onclick="openNews(5)">
           <img src="https://i.postimg.cc/vmrWRHV8/Whats-App-Image-2025-10-30-at-18-56-32.jpg" class="news-thumb" alt="News">
           <div class="news-info">
             <span class="news-cat">Lokasi</span>
             <h3 class="news-head">Spot Liar Sungai Brantas yang Rame</h3>
-            <div class="news-meta">5 Jam lalu</div>
+            <div class="news-stats">
+              <span class="stat-item"><i class="bi bi-clock"></i> 5j</span>
+              <span class="stat-item"><i class="bi bi-eye"></i> 5.1k</span>
+              <span class="stat-item stat-rating"><i class="bi bi-star-fill"></i> 4.8</span>
+            </div>
           </div>
         </a>
-        <!-- Item 5 (Tambahan agar Grid terlihat penuh) -->
-        <a href="#" class="news-card">
+        <!-- Item 6 -->
+        <a href="javascript:void(0)" class="news-card" onclick="openNews(6)">
           <div class="news-thumb" style="background:#ddd; display:flex; align-items:center; justify-content:center;">
              <i class="bi bi-camera-video" style="font-size:24px; color:#888;"></i>
           </div>
           <div class="news-info">
             <span class="news-cat">Video</span>
             <h3 class="news-head">Vlog: Mancing Nila Babon di Rawa Pening</h3>
-            <div class="news-meta">6 Jam lalu</div>
+            <div class="news-stats">
+              <span class="stat-item"><i class="bi bi-clock"></i> 6j</span>
+              <span class="stat-item"><i class="bi bi-eye"></i> 10k</span>
+              <span class="stat-item stat-rating"><i class="bi bi-star-fill"></i> 5.0</span>
+            </div>
           </div>
         </a>
-         <!-- Item 6 -->
-        <a href="#" class="news-card">
+         <!-- Item 7 -->
+        <a href="javascript:void(0)" class="news-card" onclick="openNews(7)">
           <div class="news-thumb" style="background:#2b8f6b; display:flex; align-items:center; justify-content:center;">
              <i class="bi bi-trophy" style="font-size:24px; color:#fff;"></i>
           </div>
           <div class="news-info">
             <span class="news-cat">Event</span>
             <h3 class="news-head">Grand Strike Tournament 2026</h3>
-            <div class="news-meta">1 Hari lalu</div>
+            <div class="news-stats">
+              <span class="stat-item"><i class="bi bi-clock"></i> 1h</span>
+              <span class="stat-item"><i class="bi bi-eye"></i> 2.2k</span>
+              <span class="stat-item stat-rating"><i class="bi bi-star-fill"></i> 4.7</span>
+            </div>
           </div>
         </a>
       </div>
@@ -379,27 +550,45 @@
         <i class="bi bi-graph-up-arrow" style="color: red;"></i> Trending
       </div>
       <div class="news-grid">
-        <a href="#" class="news-card">
+        <!-- Item 8 -->
+        <a href="javascript:void(0)" class="news-card" onclick="openNews(8)">
           <div class="news-thumb" style="background:black; display:flex; align-items:center; justify-content:center;">
              <i class="bi bi-play-circle-fill" style="color:white; font-size:30px;"></i>
           </div>
           <div class="news-info">
             <h3 class="news-head">Video: Detik-detik Joran Melengkung Parah!</h3>
-            <div class="news-meta">Ditonton 5k kali</div>
+            <div class="news-meta" style="margin-bottom: 8px;">Ditonton 5k kali</div>
+            <div class="news-stats">
+              <span class="stat-item"><i class="bi bi-clock"></i> 2j</span>
+              <span class="stat-item"><i class="bi bi-eye"></i> 5.5k</span>
+              <span class="stat-item stat-rating"><i class="bi bi-star-fill"></i> 4.9</span>
+            </div>
           </div>
         </a>
-         <a href="#" class="news-card">
+         <!-- Item 9 -->
+         <a href="javascript:void(0)" class="news-card" onclick="openNews(9)">
           <img src="https://i.postimg.cc/MGTBvbc9/1.png" class="news-thumb" alt="News">
           <div class="news-info">
             <h3 class="news-head">Komunitas: Gathering Akbar Bulan Depan</h3>
-            <div class="news-meta">Viral</div>
+            <div class="news-meta" style="margin-bottom: 8px;">Viral</div>
+            <div class="news-stats">
+              <span class="stat-item"><i class="bi bi-clock"></i> 4j</span>
+              <span class="stat-item"><i class="bi bi-eye"></i> 8.2k</span>
+              <span class="stat-item stat-rating"><i class="bi bi-star-fill"></i> 4.8</span>
+            </div>
           </div>
         </a>
-         <a href="#" class="news-card">
+         <!-- Item 10 -->
+         <a href="javascript:void(0)" class="news-card" onclick="openNews(10)">
           <div class="news-thumb" style="background:#0b6b4f; display:flex; align-items:center; justify-content:center; color:white; font-weight:bold; font-size:24px;">?</div>
           <div class="news-info">
             <h3 class="news-head">Misteri Ikan Tapah Raksasa Muncul Kembali</h3>
-            <div class="news-meta">Hot News</div>
+            <div class="news-meta" style="margin-bottom: 8px;">Hot News</div>
+            <div class="news-stats">
+              <span class="stat-item"><i class="bi bi-clock"></i> 1h</span>
+              <span class="stat-item"><i class="bi bi-eye"></i> 12k</span>
+              <span class="stat-item stat-rating"><i class="bi bi-star-fill"></i> 4.6</span>
+            </div>
           </div>
         </a>
       </div>
@@ -410,7 +599,6 @@
   <!-- RIGHT COLUMN (Sidebar) -->
   <aside class="sidebar">
     
-    <!-- Widget Event -->
     <div class="widget" id="event">
       <h3 class="widget-title">📅 Agenda Event</h3>
       <div class="list-item">
@@ -436,24 +624,23 @@
       <button style="width:100%; padding:10px; margin-top:10px; border:1px solid var(--primary); background:none; color:var(--primary); border-radius:8px; font-weight:600;">Lihat Semua Jadwal</button>
     </div>
 
-    <!-- Widget Populer -->
     <div class="widget" id="populer">
       <h3 class="widget-title">⭐ Populer Minggu Ini</h3>
-      <a href="#" class="list-item">
+      <a href="javascript:void(0)" onclick="openNews(4)" class="list-item">
         <span style="font-size:24px; font-weight:800; color:#ccc; width:30px;">1</span>
         <div class="list-info">
           <h4>Review Reel Ryobi vs Shimano</h4>
           <span>1.2k Pembaca</span>
         </div>
       </a>
-      <a href="#" class="list-item">
+      <a href="javascript:void(0)" onclick="openNews(5)" class="list-item">
         <span style="font-size:24px; font-weight:800; color:#ccc; width:30px;">2</span>
         <div class="list-info">
           <h4>Daftar Kolam Pancing Jakarta Selatan</h4>
           <span>900 Pembaca</span>
         </div>
       </a>
-      <a href="#" class="list-item">
+      <a href="javascript:void(0)" onclick="openNews(2)" class="list-item">
         <span style="font-size:24px; font-weight:800; color:#ccc; width:30px;">3</span>
         <div class="list-info">
           <h4>Tips Mancing Baronang</h4>
@@ -462,7 +649,6 @@
       </a>
     </div>
 
-    <!-- Widget Akun Placeholder -->
     <div class="widget" id="akun">
       <h3 class="widget-title">👤 Akun Saya</h3>
       <div style="text-align:center; padding:10px;">
@@ -476,134 +662,226 @@
 
 </div>
 
-<!-- BOTTOM NAVIGATION BAR (Sticky 5 Icons) -->
+<!-- Footer Section -->
+<footer>
+  <div style="max-width: var(--max-width); margin: 0 auto;">
+    <div style="display:flex; flex-direction:column; align-items:center; gap:8px;">
+      <img src="https://i.postimg.cc/43JHzVW8/329314-3ae915ca4c2cedce83b1b12a7addfd9d-22-11-2022-19-45-25.jpg" width="40" style="border-radius:8px; opacity:0.9;">
+      <div style="font-weight:800; font-size:18px; color:var(--primary);">Republik Mancing</div>
+      <p style="font-size:13px; color:var(--text-muted); margin:0; max-width:400px; line-height:1.6;">
+        Platform nomor satu untuk informasi lomba, tips trik, dan komunitas mancing di Indonesia.
+      </p>
+    </div>
+    
+    <div class="social-links" style="margin-top: 24px;">
+        <a href="#" class="social-btn sb-fb" title="Facebook"><i class="bi bi-facebook"></i></a>
+        <a href="#" class="social-btn sb-ig" title="Instagram"><i class="bi bi-instagram"></i></a>
+        <a href="#" class="social-btn sb-yt" title="YouTube"><i class="bi bi-youtube"></i></a>
+        <a href="#" class="social-btn sb-tt" title="TikTok"><i class="bi bi-tiktok"></i></a>
+        <a href="https://wa.me/628123456789" class="social-btn sb-wa" title="WhatsApp"><i class="bi bi-whatsapp"></i></a>
+    </div>
+    
+    <div style="margin-top:30px; font-size:11px; color:#aaa; border-top:1px solid #eee; padding-top:20px;">
+      &copy; 2026 Republik Mancing App. Dibuat dengan <i class="bi bi-heart-fill" style="color:red; font-size:10px;"></i> untuk pemancing Indonesia.
+    </div>
+  </div>
+</footer>
+
 <nav class="bottom-nav">
-  <a href="#home" class="nav-item active" onclick="setActive(this)">
-    <i class="bi bi-house-door-fill"></i>
-    <span>Home</span>
-  </a>
-  <a href="#event" class="nav-item" onclick="setActive(this)">
-    <i class="bi bi-calendar-event"></i>
-    <span>Event</span>
-  </a>
-  <a href="#trending" class="nav-item" onclick="setActive(this)">
-    <i class="bi bi-graph-up-arrow"></i>
-    <span>Trending</span>
-  </a>
-  <a href="#populer" class="nav-item" onclick="setActive(this)">
-    <i class="bi bi-star-fill"></i>
-    <span>Populer</span>
-  </a>
-  <a href="#akun" class="nav-item" onclick="setActive(this)">
-    <i class="bi bi-person-circle"></i>
-    <span>Akun</span>
-  </a>
+  <a href="#home" class="nav-item active" onclick="setActive(this)"><i class="bi bi-house-door-fill"></i><span>Home</span></a>
+  <a href="#event" class="nav-item" onclick="setActive(this)"><i class="bi bi-calendar-event"></i><span>Event</span></a>
+  <a href="#trending" class="nav-item" onclick="setActive(this)"><i class="bi bi-graph-up-arrow"></i><span>Trending</span></a>
+  <a href="#populer" class="nav-item" onclick="setActive(this)"><i class="bi bi-star-fill"></i><span>Populer</span></a>
+  <a href="#akun" class="nav-item" onclick="setActive(this)"><i class="bi bi-person-circle"></i><span>Akun</span></a>
 </nav>
 
-<!-- Install Prompt Floating Button -->
-<button id="install-btn" class="install-pwa">
-  <i class="bi bi-download"></i> Install Aplikasi
-</button>
+<button id="install-btn" class="install-pwa"><i class="bi bi-download"></i> Install Aplikasi</button>
 
 <script>
-  // === 1. SIDE DRAWER LOGIC ===
-  function toggleDrawer() {
-    const drawer = document.getElementById('sideDrawer');
-    drawer.classList.toggle('open');
-  }
+  function toggleDrawer() { document.getElementById('sideDrawer').classList.toggle('open'); }
 
-  // === 2. NAVIGATION LOGIC ===
   function setActive(element) {
     document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
     element.classList.add('active');
   }
 
-  // Smooth scroll spy for Nav
+  // === DATA BERITA ===
+  const newsDatabase = {
+    1: {
+      title: "Induk 3,2 Kg Naik di Empang Damai: Pertarungan Sengit Minggu Ini",
+      cat: "HEADLINE",
+      img: "https://i.postimg.cc/q71SRqd2/20250530140128-00-06-47-08-Still003.png",
+      content: `
+        <p><strong>REPUBLIK MANCING</strong> - Kompetisi mancing Galatama di Empang Damai minggu ini menyajikan pertarungan yang sangat sengit. Peserta dari berbagai daerah berkumpul untuk memperebutkan gelar juara mingguan.</p>
+        <p>Tepat pada pukul 15.00 WIB, seorang pemancing bernama Pak Budi berhasil menaikan induk seberat 3,2 Kg. "Tarikan ikannya luar biasa, untung senar tidak putus," ujar Pak Budi sambil tersenyum lebar.</p>
+        <p>Cuaca yang mendukung membuat ikan makan dengan lahap. Panitia mencatat total ikan yang naik mencapai 200kg lebih dalam durasi 3 jam lomba. Ini adalah rekor baru untuk kolam Empang Damai di tahun 2025.</p>
+        <h3>Tips dari Sang Juara</h3>
+        <p>Pak Budi membocorkan sedikit rahasianya, beliau menggunakan umpan pelet halus dicampur dengan essence pandan yang agak menyengat. Kombinasi ini terbukti ampuh di air yang agak keruh setelah hujan.</p>
+      `
+    },
+    2: {
+      title: "Rahasia Racikan Umpan Putih Anti Boncos",
+      cat: "TEKNIK",
+      img: "https://i.postimg.cc/VkSQ0qKZ/Screenshot-20250810-145241-Facebook.jpg",
+      content: `
+        <p>Banyak pemancing pemula sering mengalami 'boncos' alias tidak dapat ikan sama sekali. Masalah utamanya seringkali terletak pada racikan umpan yang kurang pas dengan kondisi air.</p>
+        <p>Berikut adalah resep umpan putih legendaris:</p>
+        <ul>
+          <li>2 butir telur ayam (ambil putihnya)</li>
+          <li>1 sachet susu bubuk dancow</li>
+          <li>1 ons kroto bersih</li>
+          <li>Keju craft secukupnya</li>
+          <li>Daun pandan</li>
+        </ul>
+        <p>Kukus semua bahan selama 15 menit. Setelah matang, haluskan dan campur dengan pengeras saat di kolam. Dijamin neter!</p>
+      `
+    },
+    3: {
+      title: "Daftar Juara Galatama Lele Sesi 1",
+      cat: "TURNAMEN",
+      img: "https://i.postimg.cc/dtVWh4Dh/20250807110229-MTS-00-00-51-24-Still001.png",
+      content: `
+        <p>Berikut adalah hasil rekapitulasi juara Galatama Lele di Kolam Monster Fish, Jakarta Timur tadi malam:</p>
+        <p><strong>Juara Induk 1:</strong> Tim Hore (6.5 Kg)<br>
+        <strong>Juara Induk 2:</strong> Bang Jago (5.8 Kg)<br>
+        <strong>Juara Prestasi Total:</strong> Lapak 22 (40 Ekor)</p>
+        <p>Selamat kepada para pemenang! Jangan lupa event selanjutnya akan diadakan bulan depan dengan hadiah motor.</p>
+      `
+    },
+    4: {
+      title: "Review Joran Tegek Import Murah Berkualitas",
+      cat: "REVIEW",
+      img: "https://i.postimg.cc/vnK1y2fS/20250807110229-MTS-00-00-51-24-Still001.png",
+      content: "<p>Bagi pecinta mancing nila atau baronang, joran tegek adalah senjata utama. Kali ini kita membahas joran karbon import merk 'Dragon Pole'. Ringan, kaku, dan harga cuma 100 ribuan.</p>"
+    },
+    5: {
+      title: "Spot Liar Sungai Brantas yang Lagi Rame",
+      cat: "LOKASI",
+      img: "https://i.postimg.cc/vmrWRHV8/Whats-App-Image-2025-10-30-at-18-56-32.jpg",
+      content: "<p>Sungai Brantas di area Kediri sedang banjir ikan wader dan tawes. Warga sekitar melaporkan banyak pemancing yang panen raya sejak 3 hari lalu. Air yang mulai surut membuat spot ini sangat potensial.</p>"
+    },
+    6: {
+      title: "Vlog: Mancing Nila Babon di Rawa Pening",
+      cat: "VIDEO",
+      img: "https://via.placeholder.com/600x400/000/fff?text=Video+Player", // Fallback placeholder logic used
+      content: "<p>Simak keseruan tim Republik Mancing menaklukan eceng gondok Rawa Pening demi mendapatkan Nila Babon 5 jarian. Teknik lubang (nyobok) menjadi kunci sukses kali ini.</p>"
+    },
+    7: {
+      title: "Grand Strike Tournament 2026 Segera Dibuka!",
+      cat: "EVENT",
+      img: "https://via.placeholder.com/600x400/2b8f6b/fff?text=Tournament",
+      content: "<p>Siapkan joran anda! Turnamen mancing terbesar se-Indonesia akan kembali digelar. Total hadiah mencapai 500 Juta Rupiah. Pendaftaran dibuka mulai 1 Januari 2026.</p>"
+    },
+    8: {
+      title: "Video Viral: Detik-detik Joran Melengkung Parah!",
+      cat: "TRENDING",
+      img: "https://via.placeholder.com/600x400/000/fff?text=Viral+Video",
+      content: "<p>Sebuah video viral di TikTok menampilkan perjuangan pemancing melawan Monster Patin di Danau Toba. Joran fiber solid miliknya melengkung hingga membentuk huruf U sempurna!</p>"
+    },
+    9: {
+      title: "Komunitas: Gathering Akbar Bulan Depan",
+      cat: "KOMUNITAS",
+      img: "https://i.postimg.cc/MGTBvbc9/1.png",
+      content: "<p>Forum Komunikasi Pemancing (FKP) akan mengadakan kopi darat di Puncak, Bogor. Agenda acara meliputi sharing teknik, bazaar alat pancing bekas, dan tentu saja mancing bareng.</p>"
+    },
+    10: {
+      title: "Misteri Ikan Tapah Raksasa Muncul Kembali",
+      cat: "MISTERI",
+      img: "https://via.placeholder.com/600x400/0b6b4f/fff?text=Misteri",
+      content: "<p>Warga di pinggiran sungai Musi dihebohkan dengan penampakan ikan Tapah yang diperkirakan berukuran sebesar perahu kecil. Mitos atau fakta? Tim kami sedang menuju lokasi.</p>"
+    }
+  };
+
+  // === READER LOGIC ===
+  function openNews(id) {
+    const data = newsDatabase[id];
+    if(!data) return; 
+
+    // Populate Data
+    document.getElementById('r_img').src = data.img;
+    document.getElementById('r_cat').innerText = data.cat;
+    document.getElementById('r_title').innerText = data.title;
+    document.getElementById('r_body').innerHTML = data.content;
+    
+    // Show View & Floating Bar
+    document.getElementById('newsReader').classList.add('active');
+    document.getElementById('floatShare').classList.add('visible');
+    document.body.style.overflow = 'hidden'; 
+  }
+
+  function closeNews() {
+    document.getElementById('newsReader').classList.remove('active');
+    document.getElementById('floatShare').classList.remove('visible');
+    document.body.style.overflow = 'auto'; 
+  }
+
+  // === SHARE LOGIC ===
+  function shareTo(platform) {
+    const url = window.location.href;
+    const text = "Cek berita mancing terbaru ini!";
+    
+    if (platform === 'wa') {
+      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text + " " + url)}`, '_blank');
+    } else if (platform === 'fb') {
+      window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank');
+    } else if (platform === 'tw') {
+      window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`, '_blank');
+    } else if (platform === 'copy') {
+      navigator.clipboard.writeText(url).then(() => alert('Link berhasil disalin!'));
+    }
+  }
+  
+  function shareNative() {
+    if (navigator.share) {
+      navigator.share({
+        title: document.title,
+        text: 'Info Mancing Terupdate',
+        url: window.location.href,
+      });
+    }
+  }
+
+  // === EXISTING LOGIC ===
   window.addEventListener('scroll', () => {
     let current = "";
     const sections = ['home', 'event', 'trending', 'populer', 'akun'];
-    
     sections.forEach(id => {
       const el = document.getElementById(id);
       if (el) {
         const rect = el.getBoundingClientRect();
-        if (rect.top >= 0 && rect.top <= 300) {
-          current = id;
-        }
+        if (rect.top >= 0 && rect.top <= 300) current = id;
       }
     });
-
     if (current) {
       document.querySelectorAll('.nav-item').forEach(a => {
         a.classList.remove('active');
-        if (a.getAttribute('href').includes(current)) {
-          a.classList.add('active');
-        }
+        if (a.getAttribute('href').includes(current)) a.classList.add('active');
       });
     }
   });
 
-  // === 3. PWA INSTALL LOGIC ===
+  // PWA & Install
   let deferredPrompt;
   const installBtn = document.getElementById('install-btn');
-
-  // Generate Dynamic Manifest
   const manifest = {
-    "name": "Republik Mancing",
-    "short_name": "RM App",
-    "start_url": ".",
-    "display": "standalone",
-    "background_color": "#ffffff",
-    "theme_color": "#0b6b4f",
-    "icons": [
-      {
-        "src": "https://i.postimg.cc/43JHzVW8/329314-3ae915ca4c2cedce83b1b12a7addfd9d-22-11-2022-19-45-25.jpg",
-        "sizes": "192x192",
-        "type": "image/jpeg"
-      },
-      {
-        "src": "https://i.postimg.cc/43JHzVW8/329314-3ae915ca4c2cedce83b1b12a7addfd9d-22-11-2022-19-45-25.jpg",
-        "sizes": "512x512",
-        "type": "image/jpeg"
-      }
-    ]
+    "name": "Republik Mancing", "short_name": "RM App", "start_url": ".",
+    "display": "standalone", "background_color": "#ffffff", "theme_color": "#0b6b4f",
+    "icons": [{"src": "https://i.postimg.cc/43JHzVW8/329314-3ae915ca4c2cedce83b1b12a7addfd9d-22-11-2022-19-45-25.jpg","sizes": "192x192","type": "image/jpeg"}]
   };
-  const stringManifest = JSON.stringify(manifest);
-  const blob = new Blob([stringManifest], {type: 'application/json'});
+  const blob = new Blob([JSON.stringify(manifest)], {type: 'application/json'});
   document.getElementById('my-manifest-placeholder').setAttribute('href', URL.createObjectURL(blob));
 
-  // Service Worker Registration
   if ('serviceWorker' in navigator) {
-    const swCode = `
-      self.addEventListener('install', e => self.skipWaiting());
-      self.addEventListener('fetch', e => {}); 
-    `;
-    const swBlob = new Blob([swCode], {type: 'text/javascript'});
-    navigator.serviceWorker.register(URL.createObjectURL(swBlob))
-      .catch(err => console.log('SW Error:', err));
+    navigator.serviceWorker.register(URL.createObjectURL(new Blob([`self.addEventListener('install', e => self.skipWaiting()); self.addEventListener('fetch', e => {});`], {type: 'text/javascript'}))).catch(err => console.log('SW Error:', err));
   }
 
-  // Install Prompt Event
   window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-    installBtn.style.display = 'block'; // Show button
+    e.preventDefault(); deferredPrompt = e; installBtn.style.display = 'block';
   });
-
   installBtn.addEventListener('click', async () => {
-    if (deferredPrompt) {
-      deferredPrompt.prompt();
-      const { outcome } = await deferredPrompt.userChoice;
-      if (outcome === 'accepted') {
-        installBtn.style.display = 'none';
-      }
-      deferredPrompt = null;
-    }
+    if (deferredPrompt) { deferredPrompt.prompt(); deferredPrompt = null; }
   });
-
-  window.addEventListener('appinstalled', () => {
-    installBtn.style.display = 'none';
-  });
+  window.addEventListener('appinstalled', () => { installBtn.style.display = 'none'; });
 </script>
 
 </body>
