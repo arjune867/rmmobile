@@ -1,0 +1,501 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <!-- Viewport adjustment for Notch/PWA/Mobile -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  
+  <title>Republik Mancing — App</title>
+  <meta name="description" content="Aplikasi berita dan event mancing nomor 1 di Indonesia." />
+  <meta name="theme-color" content="#ffffff" />
+  
+  <!-- iOS Support -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Republik Mancing">
+  
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  
+  <!-- Placeholder Icons & Manifest -->
+  <link rel="icon" href="https://i.postimg.cc/43JHzVW8/329314-3ae915ca4c2cedce83b1b12a7addfd9d-22-11-2022-19-45-25.jpg" />
+  <link rel="manifest" id="my-manifest-placeholder">
+
+  <style>
+    :root{
+      --primary: #0b6b4f;
+      --primary-dark: #064e39;
+      --bg: #f8f9fa;
+      --surface: #ffffff;
+      --text-main: #1f2937;
+      --text-muted: #6b7280;
+      --border: #e5e7eb;
+      --shadow: 0 1px 3px rgba(0,0,0,0.05);
+      
+      /* Dimensi */
+      --max-width: 1200px;
+      --header-height: 60px;
+      --bottom-nav-height: 65px;
+      
+      /* Safe Area */
+      --sat: env(safe-area-inset-top);
+      --sab: env(safe-area-inset-bottom);
+    }
+    
+    /* === RESET & BASE === */
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg); color: var(--text-main); line-height: 1.5;
+      padding-bottom: calc(var(--bottom-nav-height) + var(--sab) + 20px); /* Space for bottom nav */
+    }
+
+    /* === HEADER (Desktop Only mostly) === */
+    header {
+      background: var(--surface);
+      height: calc(var(--header-height) + var(--sat));
+      padding-top: var(--sat);
+      position: sticky; top: 0; z-index: 50;
+      border-bottom: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+    .header-content {
+      max-width: var(--max-width); margin: 0 auto;
+      height: 100%; display: flex; align-items: center; justify-content: space-between;
+      padding: 0 16px;
+    }
+    .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text-main); }
+    .logo { width: 36px; height: 36px; border-radius: 8px; object-fit: cover; }
+    .brand-name { font-weight: 800; font-size: 18px; letter-spacing: -0.5px; }
+
+    /* Desktop Nav (Hidden on Mobile) */
+    .desktop-nav { display: none; gap: 20px; }
+    .desktop-nav a { text-decoration: none; color: var(--text-muted); font-weight: 600; font-size: 14px; transition: 0.2s; }
+    .desktop-nav a:hover, .desktop-nav a.active { color: var(--primary); }
+
+    /* === LAYOUT GRID === */
+    .container {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 20px 16px;
+      display: grid;
+      grid-template-columns: 1fr 320px; /* 2 Kolom: Konten (Flexible) - Sidebar (Fixed) */
+      gap: 24px;
+      align-items: start;
+    }
+
+    /* === MAIN CONTENT === */
+    /* Hero Section */
+    .hero-card {
+      background: var(--surface); border-radius: 16px; overflow: hidden;
+      box-shadow: var(--shadow); margin-bottom: 24px; position: relative;
+    }
+    .hero-img { width: 100%; height: 300px; object-fit: cover; display: block; }
+    .hero-content { padding: 20px; }
+    .badge { 
+      background: #dc2626; color: white; font-size: 10px; font-weight: bold; 
+      padding: 4px 8px; border-radius: 4px; text-transform: uppercase;
+      display: inline-block; margin-bottom: 8px;
+    }
+    .hero-title { margin: 0 0 10px; font-size: 22px; line-height: 1.3; }
+
+    /* News Grid (Inside Main) - Responsive 2 Columns on Mobile */
+    .section-title { font-size: 18px; font-weight: 800; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+    .news-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Desktop responsive */
+      gap: 16px;
+    }
+    
+    .news-card {
+      background: var(--surface); border-radius: 12px; overflow: hidden;
+      box-shadow: var(--shadow); text-decoration: none; color: inherit;
+      display: flex; flex-direction: column; height: 100%; transition: transform 0.2s;
+    }
+    .news-card:active { transform: scale(0.98); }
+    .news-thumb { width: 100%; aspect-ratio: 16/9; object-fit: cover; background: #eee; }
+    .news-info { padding: 12px; flex: 1; display: flex; flex-direction: column; }
+    .news-cat { font-size: 10px; color: var(--primary); font-weight: 700; text-transform: uppercase; margin-bottom: 4px; }
+    .news-head { font-size: 14px; font-weight: 700; line-height: 1.4; margin: 0 0 8px; flex: 1; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;}
+    .news-meta { font-size: 11px; color: var(--text-muted); margin-top: auto; }
+
+    /* === SIDEBAR (Desktop/Tablet) === */
+    .sidebar { display: flex; flex-direction: column; gap: 20px; }
+    .widget { background: var(--surface); border-radius: 16px; padding: 20px; box-shadow: var(--shadow); }
+    .widget-title { font-size: 16px; font-weight: 700; margin: 0 0 16px; border-bottom: 2px solid var(--bg); padding-bottom: 8px; }
+    
+    .list-item { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; text-decoration: none; color: inherit; }
+    .list-item:last-child { margin-bottom: 0; }
+    .list-thumb { width: 60px; height: 60px; border-radius: 8px; object-fit: cover; }
+    .list-info h4 { margin: 0; font-size: 14px; font-weight: 600; line-height: 1.3; }
+    .list-info span { font-size: 12px; color: var(--text-muted); }
+
+    /* === BOTTOM NAVBAR (Mobile Only) === */
+    .bottom-nav {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+      border-top: 1px solid var(--border);
+      height: calc(var(--bottom-nav-height) + var(--sab));
+      padding-bottom: var(--sab);
+      display: grid;
+      grid-template-columns: repeat(5, 1fr); /* 5 Icons Grid */
+      z-index: 100;
+    }
+    
+    .nav-item {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-decoration: none; color: var(--text-muted);
+      font-size: 10px; font-weight: 500; gap: 4px;
+      transition: all 0.2s;
+    }
+    .nav-item i { font-size: 20px; margin-bottom: 2px; transition: transform 0.2s; }
+    .nav-item.active { color: var(--primary); }
+    .nav-item.active i { transform: translateY(-2px); }
+    
+    /* Install Button */
+    .install-pwa {
+      background: var(--text-main); color: white; border: none;
+      padding: 10px 20px; border-radius: 50px; font-weight: 600;
+      position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%);
+      z-index: 90; box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+      display: none; animation: slideUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      cursor: pointer;
+    }
+
+    @keyframes slideUp { from { transform: translate(-50%, 100%); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }
+
+    /* === RESPONSIVE RULES === */
+    @media (min-width: 900px) {
+      .desktop-nav { display: flex; }
+      .bottom-nav { display: none; }
+      body { padding-bottom: 0; }
+    }
+
+    @media (max-width: 899px) {
+      .container { grid-template-columns: 1fr; /* Stack layout on mobile */ }
+      .sidebar { order: 2; } /* Sidebar moves below content */
+      
+      /* Mobile Grid Adjustment: 2 Columns for News */
+      .news-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+      .news-head { font-size: 13px; }
+      .hero-img { height: 200px; }
+      .hero-title { font-size: 18px; }
+    }
+    
+    @media (max-width: 380px) {
+      .news-grid { grid-template-columns: 1fr; } /* Very small screens 1 column */
+    }
+  </style>
+</head>
+<body>
+
+<!-- Header Top (Logo & Search) -->
+<header>
+  <div class="header-content">
+    <a href="#" class="brand">
+      <img src="https://i.postimg.cc/43JHzVW8/329314-3ae915ca4c2cedce83b1b12a7addfd9d-22-11-2022-19-45-25.jpg" class="logo" alt="RM">
+      <span class="brand-name">Republik Mancing</span>
+    </a>
+    
+    <!-- Menu Desktop -->
+    <nav class="desktop-nav">
+      <a href="#home" class="active">Home</a>
+      <a href="#event">Event</a>
+      <a href="#trending">Trending</a>
+      <a href="#populer">Populer</a>
+      <a href="#akun">Akun</a>
+    </nav>
+
+    <!-- Mobile Action (Search icon placeholder) -->
+    <div style="display: flex; gap:16px; align-items:center;">
+      <i class="bi bi-search" style="font-size:20px; cursor:pointer;"></i>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+  
+  <!-- LEFT COLUMN (Main Content) -->
+  <main>
+    <!-- Section: Home / Highlight -->
+    <div id="home">
+      <article class="hero-card">
+        <img src="https://i.postimg.cc/q71SRqd2/20250530140128-00-06-47-08-Still003.png" class="hero-img" alt="Headline">
+        <div class="hero-content">
+          <span class="badge">Headline</span>
+          <h2 class="hero-title">Induk 3,2 Kg Naik di Empang Damai: Pertarungan Sengit Minggu Ini</h2>
+          <div style="color:var(--text-muted); font-size:13px;">Oleh Admin • 2 jam yang lalu</div>
+        </div>
+      </article>
+
+      <div class="section-title">
+        <i class="bi bi-lightning-charge-fill" style="color: gold;"></i> Terkini
+      </div>
+      
+      <div class="news-grid">
+        <!-- Item 1 -->
+        <a href="#" class="news-card">
+          <img src="https://i.postimg.cc/VkSQ0qKZ/Screenshot-20250810-145241-Facebook.jpg" class="news-thumb" alt="News">
+          <div class="news-info">
+            <span class="news-cat">Teknik</span>
+            <h3 class="news-head">Rahasia Racikan Umpan Putih Anti Boncos</h3>
+            <div class="news-meta">10 Menit lalu</div>
+          </div>
+        </a>
+        <!-- Item 2 -->
+        <a href="#" class="news-card">
+          <img src="https://i.postimg.cc/dtVWh4Dh/20250807110229-MTS-00-00-51-24-Still001.png" class="news-thumb" alt="News">
+          <div class="news-info">
+            <span class="news-cat">Turnamen</span>
+            <h3 class="news-head">Daftar Juara Galatama Lele Sesi 1</h3>
+            <div class="news-meta">1 Jam lalu</div>
+          </div>
+        </a>
+        <!-- Item 3 -->
+        <a href="#" class="news-card">
+          <img src="https://i.postimg.cc/vnK1y2fS/20250807110229-MTS-00-00-51-24-Still001.png" class="news-thumb" alt="News">
+          <div class="news-info">
+            <span class="news-cat">Review</span>
+            <h3 class="news-head">Joran Tegek Import Murah Berkualitas</h3>
+            <div class="news-meta">3 Jam lalu</div>
+          </div>
+        </a>
+        <!-- Item 4 -->
+        <a href="#" class="news-card">
+          <img src="https://i.postimg.cc/vmrWRHV8/Whats-App-Image-2025-10-30-at-18-56-32.jpg" class="news-thumb" alt="News">
+          <div class="news-info">
+            <span class="news-cat">Lokasi</span>
+            <h3 class="news-head">Spot Liar Sungai Brantas yang Lagi Rame</h3>
+            <div class="news-meta">5 Jam lalu</div>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <!-- Section: Trending -->
+    <div id="trending" style="padding-top: 30px;">
+      <div class="section-title">
+        <i class="bi bi-graph-up-arrow" style="color: red;"></i> Trending
+      </div>
+      <div class="news-grid">
+        <a href="#" class="news-card">
+          <div class="news-thumb" style="background:black; display:flex; align-items:center; justify-content:center;">
+             <i class="bi bi-play-circle-fill" style="color:white; font-size:30px;"></i>
+          </div>
+          <div class="news-info">
+            <h3 class="news-head">Video: Detik-detik Joran Melengkung Parah!</h3>
+            <div class="news-meta">Ditonton 5k kali</div>
+          </div>
+        </a>
+         <a href="#" class="news-card">
+          <img src="https://i.postimg.cc/MGTBvbc9/1.png" class="news-thumb" alt="News">
+          <div class="news-info">
+            <h3 class="news-head">Komunitas: Gathering Akbar Bulan Depan</h3>
+            <div class="news-meta">Viral</div>
+          </div>
+        </a>
+      </div>
+    </div>
+    
+  </main>
+
+  <!-- RIGHT COLUMN (Sidebar) -->
+  <aside class="sidebar">
+    
+    <!-- Widget Event -->
+    <div class="widget" id="event">
+      <h3 class="widget-title">📅 Agenda Event</h3>
+      <div class="list-item">
+        <div style="background:#e0f2fe; color:#0284c7; width:50px; height:50px; border-radius:8px; display:flex; flex-direction:column; align-items:center; justify-content:center; font-weight:bold;">
+          <span style="font-size:10px;">NOV</span>
+          <span style="font-size:16px;">28</span>
+        </div>
+        <div class="list-info">
+          <h4>Lomba Ikan Mas</h4>
+          <span>Empang Damai • Tiket 150K</span>
+        </div>
+      </div>
+      <div class="list-item">
+        <div style="background:#fef3c7; color:#d97706; width:50px; height:50px; border-radius:8px; display:flex; flex-direction:column; align-items:center; justify-content:center; font-weight:bold;">
+          <span style="font-size:10px;">DES</span>
+          <span style="font-size:16px;">05</span>
+        </div>
+        <div class="list-info">
+          <h4>Galatama Lele</h4>
+          <span>Kolam Ratu • Tiket 50K</span>
+        </div>
+      </div>
+      <button style="width:100%; padding:10px; margin-top:10px; border:1px solid var(--primary); background:none; color:var(--primary); border-radius:8px; font-weight:600;">Lihat Semua Jadwal</button>
+    </div>
+
+    <!-- Widget Populer -->
+    <div class="widget" id="populer">
+      <h3 class="widget-title">⭐ Populer Minggu Ini</h3>
+      <a href="#" class="list-item">
+        <span style="font-size:24px; font-weight:800; color:#ccc; width:30px;">1</span>
+        <div class="list-info">
+          <h4>Review Reel Ryobi vs Shimano</h4>
+          <span>1.2k Pembaca</span>
+        </div>
+      </a>
+      <a href="#" class="list-item">
+        <span style="font-size:24px; font-weight:800; color:#ccc; width:30px;">2</span>
+        <div class="list-info">
+          <h4>Daftar Kolam Pancing Jakarta Selatan</h4>
+          <span>900 Pembaca</span>
+        </div>
+      </a>
+      <a href="#" class="list-item">
+        <span style="font-size:24px; font-weight:800; color:#ccc; width:30px;">3</span>
+        <div class="list-info">
+          <h4>Tips Mancing Baronang</h4>
+          <span>850 Pembaca</span>
+        </div>
+      </a>
+    </div>
+
+    <!-- Widget Akun Placeholder -->
+    <div class="widget" id="akun">
+      <h3 class="widget-title">👤 Akun Saya</h3>
+      <div style="text-align:center; padding:10px;">
+        <i class="bi bi-person-circle" style="font-size:48px; color:var(--text-muted);"></i>
+        <p>Silakan login untuk menyimpan artikel favorit.</p>
+        <button style="background:var(--primary); color:white; border:none; padding:8px 24px; border-radius:6px; cursor:pointer;">Masuk</button>
+      </div>
+    </div>
+
+  </aside>
+
+</div>
+
+<!-- BOTTOM NAVIGATION BAR (Sticky 5 Icons) -->
+<nav class="bottom-nav">
+  <a href="#home" class="nav-item active" onclick="setActive(this)">
+    <i class="bi bi-house-door-fill"></i>
+    <span>Home</span>
+  </a>
+  <a href="#event" class="nav-item" onclick="setActive(this)">
+    <i class="bi bi-calendar-event"></i>
+    <span>Event</span>
+  </a>
+  <a href="#trending" class="nav-item" onclick="setActive(this)">
+    <i class="bi bi-graph-up-arrow"></i>
+    <span>Trending</span>
+  </a>
+  <a href="#populer" class="nav-item" onclick="setActive(this)">
+    <i class="bi bi-star-fill"></i>
+    <span>Populer</span>
+  </a>
+  <a href="#akun" class="nav-item" onclick="setActive(this)">
+    <i class="bi bi-person-circle"></i>
+    <span>Akun</span>
+  </a>
+</nav>
+
+<!-- Install Prompt Floating Button -->
+<button id="install-btn" class="install-pwa">
+  <i class="bi bi-download"></i> Install Aplikasi
+</button>
+
+<script>
+  // === 1. NAVIGATION LOGIC ===
+  function setActive(element) {
+    // Reset active class
+    document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+    // Set active
+    element.classList.add('active');
+  }
+
+  // Smooth scroll spy for Nav
+  window.addEventListener('scroll', () => {
+    let current = "";
+    const sections = ['home', 'event', 'trending', 'populer', 'akun'];
+    
+    sections.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        const rect = el.getBoundingClientRect();
+        if (rect.top >= 0 && rect.top <= 300) {
+          current = id;
+        }
+      }
+    });
+
+    if (current) {
+      document.querySelectorAll('.nav-item').forEach(a => {
+        a.classList.remove('active');
+        if (a.getAttribute('href').includes(current)) {
+          a.classList.add('active');
+        }
+      });
+    }
+  });
+
+  // === 2. PWA INSTALL LOGIC ===
+  let deferredPrompt;
+  const installBtn = document.getElementById('install-btn');
+
+  // Generate Dynamic Manifest
+  const manifest = {
+    "name": "Republik Mancing",
+    "short_name": "RM App",
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#0b6b4f",
+    "icons": [
+      {
+        "src": "https://i.postimg.cc/43JHzVW8/329314-3ae915ca4c2cedce83b1b12a7addfd9d-22-11-2022-19-45-25.jpg",
+        "sizes": "192x192",
+        "type": "image/jpeg"
+      },
+      {
+        "src": "https://i.postimg.cc/43JHzVW8/329314-3ae915ca4c2cedce83b1b12a7addfd9d-22-11-2022-19-45-25.jpg",
+        "sizes": "512x512",
+        "type": "image/jpeg"
+      }
+    ]
+  };
+  const stringManifest = JSON.stringify(manifest);
+  const blob = new Blob([stringManifest], {type: 'application/json'});
+  document.getElementById('my-manifest-placeholder').setAttribute('href', URL.createObjectURL(blob));
+
+  // Service Worker Registration
+  if ('serviceWorker' in navigator) {
+    const swCode = `
+      self.addEventListener('install', e => self.skipWaiting());
+      self.addEventListener('fetch', e => {}); 
+    `;
+    const swBlob = new Blob([swCode], {type: 'text/javascript'});
+    navigator.serviceWorker.register(URL.createObjectURL(swBlob))
+      .catch(err => console.log('SW Error:', err));
+  }
+
+  // Install Prompt Event
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    installBtn.style.display = 'block'; // Show button
+  });
+
+  installBtn.addEventListener('click', async () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      if (outcome === 'accepted') {
+        installBtn.style.display = 'none';
+      }
+      deferredPrompt = null;
+    }
+  });
+
+  // Hide install button if app is already installed
+  window.addEventListener('appinstalled', () => {
+    installBtn.style.display = 'none';
+  });
+</script>
+
+</body>
+</html>
